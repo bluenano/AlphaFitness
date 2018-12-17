@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">AlphaFitness</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="record_workout">Record Workout</string>
+    <string name="distance">DISTANCE</string>
+    <string name="duration">DURATION</string>
+    <string name="minutes">Minutes</string>
+    <string name="units_miles">MI</string>
+    <string name="placeholder">placeholder</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="name_hint">Enter your name</string>
+    <string name="gender">Gender:</string>
+    <string name="gender_edit_text">gender</string>
+    <string name="weight">Weight:</string>
+    <string name="weight_edit_text">weight</string>
+    <string name="average_weekly">Average/Weekly</string>
+    <string name="profile_distance">Distance</string>
+    <string name="profile_time">Time</string>
+    <string name="profile_workouts">Workouts</string>
+    <string name="profile_calories">Calories Burned</string>
+    <string name="all_time">All Time</string>
+    <string name="start_workout">Start Workout</string>
+    <string name="stop_workout">Stop Workout</string>
+    <string name="start_time">00:00:00</string>
+    <string name="default_rate">0:00</string>
+    <string name="start_distance">0.0</string>
+    <string name="workout_details">Workout Details</string>
+    <string name="max">MAX</string>
+    <string name="min">MIN</string>
+    <string name="average">AVG</string>
+    <string name="units_time_rate">min/mi</string>
+</resources>
