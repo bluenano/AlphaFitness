@@ -1,14 +1,13 @@
 # AlphaFitness
 
-- Sean Schlaefli
--- sean.schlaefli@sjsu.edu
+ Mobile application that helps user's keep track of statistics gathered from working out
+
+## Screenshots
+ I will add some screenshots soon!
 
 ## Additional Information
-
-How to compile and execute your program?
- Program can be compiled and run using Android Studio.
  
- The UI needs to be polished more, specifically the graphs are not appealing. 
+ The UI needs to be polished, specifically the graphs are not appealing.
  I am using a Remote Service that broadcasts the state of a workout every second. 
  I use Broadcast Receivers that run on background threads to receive the state of a 
  workout and post updates to a Handler running on the main thread that will then 
