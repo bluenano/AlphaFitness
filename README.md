@@ -3,8 +3,10 @@
  Mobile application that helps user's keep track of statistics gathered from working out
 
 ## Screenshots
- 
- ![Record Screen](images/RecordActivity.png)
+
+ ![Record Screen](https://github.com/sean-ms/AlphaFitness/tree/master/images/RecordActivity.png)
+ ![Workout Details Screen](https://github.com/sean-ms/AlphaFitness/tree/master/images/WorkoutDetails.png)
+ ![Profile Screen](https://github.com/sean-ms/AlphaFitness/tree/master/images/ProfileActivity.png)
 
 ## Additional Information
  
