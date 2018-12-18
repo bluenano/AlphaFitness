@@ -4,9 +4,11 @@
 
 ## Screenshots
 
- ![Record Screen](https://github.com/sean-ms/AlphaFitness/tree/master/images/RecordActivity.png)
- ![Workout Details Screen](https://github.com/sean-ms/AlphaFitness/tree/master/images/WorkoutDetails.png)
- ![Profile Screen](https://github.com/sean-ms/AlphaFitness/tree/master/images/ProfileActivity.png)
+ ![Record Screen](./images/RecordActivity.png)
+ 
+ ![Workout Details Screen](./images/WorkoutDetails.png)
+ 
+ ![Profile Screen](./images/ProfileActivity.png)
 
 ## Additional Information
  
