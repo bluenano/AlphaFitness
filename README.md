@@ -3,7 +3,8 @@
  Mobile application that helps user's keep track of statistics gathered from working out
 
 ## Screenshots
- I will add some screenshots soon!
+ 
+ ![Record Screen](images/RecordActivity.png)
 
 ## Additional Information
  
