@@ -14,7 +14,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -257,7 +256,6 @@ public class RecordActivity extends AppCompatActivity
         if (mIsWorkoutStarted) {
             if (intent.hasExtra(WorkoutService.EXTRA_TOTAL_TIME)) {
                 int seconds = intent.getIntExtra(WorkoutService.EXTRA_TOTAL_TIME, 0);
-                Log.d(TAG, "Received broadcast for seconds: " + Integer.toString(seconds));
                 mWorkout.setSeconds(seconds);
             }
 

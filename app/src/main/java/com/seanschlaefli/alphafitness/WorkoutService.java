@@ -12,7 +12,6 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -67,7 +66,6 @@ public class WorkoutService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy");
         super.onDestroy();
         if (mFusedLocationClient != null) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
@@ -78,7 +76,6 @@ public class WorkoutService extends Service {
         if (mRecordRunnable != null) {
             mRecordRunnable.terminate();
         }
-        Log.d(TAG, "Workout Service onDestroy");
     }
 
     @Override
@@ -91,8 +88,6 @@ public class WorkoutService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Log.d(TAG, "Remote Service Created");
-
         mContext = this;
 
         mWorkout = new Workout(mIsMale);
@@ -100,8 +95,6 @@ public class WorkoutService extends Service {
         SensorEventListener stepListener = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
-                Log.d(TAG, "Sensor Event Detected");
-
                 Sensor sensor = event.sensor;
                 float[] stepValues = event.values;
 
@@ -113,7 +106,6 @@ public class WorkoutService extends Service {
                         mWorkout.updateRates(WorkoutMath.calculateAvgRateInMinPerMile(mWorkout.getCurrentStepCount(),
                                 mWorkout.getTotalTime(), mWorkout.isMale()));
                     }
-                    Log.d(TAG, "Step Count detected and incremented to " + Integer.toString(mWorkout.getCurrentStepCount()));
                 }
             }
 
@@ -125,15 +117,11 @@ public class WorkoutService extends Service {
         SensorManager sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor stepCounter = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         if (stepCounter == null) {
-            Log.d(TAG, "Device does not have a step counter");
             mSimulation = new WorkoutSimulationTask();
             Thread thread = new Thread(mSimulation);
             thread.start();
             return;
-        } else {
-            Log.d(TAG, "Device does have a step counter");
         }
-
 
         setLocationRequest();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -141,7 +129,6 @@ public class WorkoutService extends Service {
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 !=
                 PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Do not have the appropriate permissions");
             return;
         }
 
@@ -150,7 +137,6 @@ public class WorkoutService extends Service {
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
-                            Log.d(TAG, "First current location set");
                             mWorkout.addLocation(location, Calendar.getInstance().getTimeInMillis());
                         }
                     }
@@ -159,7 +145,6 @@ public class WorkoutService extends Service {
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                Log.d(TAG, "Received location callback");
                 if (locationResult == null) {
                     return;
                 }
@@ -167,7 +152,6 @@ public class WorkoutService extends Service {
                 if (locations.size() == 0) {
                     return;
                 }
-                Log.d(TAG, "LocationResult size is " + Integer.toString(locations.size()));
                 for (Location location: locations) {
                     mWorkout.addLocation(location, Calendar.getInstance().getTimeInMillis());
                 }
@@ -210,7 +194,6 @@ public class WorkoutService extends Service {
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 !=
                 PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Do not have the appropriate permissions");
             return;
         }
         mFusedLocationClient.requestLocationUpdates(
@@ -226,7 +209,6 @@ public class WorkoutService extends Service {
         private volatile boolean mRunFlag = true;
 
         public void terminate() {
-            Log.d(TAG, "Terminating record workout thread");
             mRunFlag = false;
         }
 
@@ -235,9 +217,7 @@ public class WorkoutService extends Service {
             while (mRunFlag) {
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    Log.d(TAG, "InterruptedException in location tracking loop");
-                }
+                } catch (InterruptedException e) {}
                 mWorkout.incSeconds();
                 broadcastWorkout(mWorkout);
             }

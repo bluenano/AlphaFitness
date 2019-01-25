@@ -1,7 +1,6 @@
 package com.seanschlaefli.alphafitness;
 
 import android.location.Location;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -188,7 +187,6 @@ public class Workout {
     public void updateRates(float newAvgRate) {
         if (!Float.isNaN(newAvgRate)) {
             mAvgRate = newAvgRate;
-            Log.d(TAG, "Workout Avg rate is " + mAvgRate);
             updateMinRate(newAvgRate);
             updateMaxRate(newAvgRate);
         }
@@ -205,20 +203,16 @@ public class Workout {
         if (newAvgRate < mMinRate) {
             mMinRate = newAvgRate;
         }
-        Log.d(TAG, "Workout Min rate is " + mMinRate);
     }
 
     private void updateMaxRate(float newAvgRate) {
         if (mMaxRate == null) {
-            Log.d(TAG, "Set max rate for the first time");
             mMaxRate = newAvgRate;
             return;
         }
         if (newAvgRate > mMaxRate) {
             mMaxRate = newAvgRate;
         }
-        Log.d(TAG, "Workout Max rate is " + mMaxRate);
-
     }
 
     public void setSeconds(int seconds) {

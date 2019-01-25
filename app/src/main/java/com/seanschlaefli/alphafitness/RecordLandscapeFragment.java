@@ -70,7 +70,7 @@ public class RecordLandscapeFragment extends Fragment {
         mBarChart = v.findViewById(R.id.bar_chart_id);
         mLineChart = v.findViewById(R.id.line_chart_id);
 
-        initializeXAxisValues();
+        initializeXAxisValues(5, 60, 5);
         setupXAxis(mBarChart);
         setupXAxis(mLineChart);
 
@@ -126,20 +126,11 @@ public class RecordLandscapeFragment extends Fragment {
         return new RecordLandscapeFragment();
     }
 
-    private void initializeXAxisValues() {
+    private void initializeXAxisValues(int min, int max, int increment) {
         mXAxisMinutes = new ArrayList<>();
-        mXAxisMinutes.add(5);
-        mXAxisMinutes.add(10);
-        mXAxisMinutes.add(15);
-        mXAxisMinutes.add(20);
-        mXAxisMinutes.add(25);
-        mXAxisMinutes.add(30);
-        mXAxisMinutes.add(35);
-        mXAxisMinutes.add(40);
-        mXAxisMinutes.add(45);
-        mXAxisMinutes.add(50);
-        mXAxisMinutes.add(55);
-        mXAxisMinutes.add(60);
+        for (int i = min; i < max; i += increment) {
+            mXAxisMinutes.add(i);
+        }
     }
 
     private void setupXAxis(Chart chart) {

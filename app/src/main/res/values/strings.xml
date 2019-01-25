@@ -29,4 +29,5 @@
     <string name="min">MIN</string>
     <string name="average">AVG</string>
     <string name="units_time_rate">min/mi</string>
+    <string name="profile">Access Profile</string>
 </resources>

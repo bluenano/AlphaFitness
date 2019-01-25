@@ -22,6 +22,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import java.text.NumberFormat;
 
 
 public class ProfileActivity extends AppCompatActivity
@@ -44,8 +49,8 @@ public class ProfileActivity extends AppCompatActivity
     private EditText mGender;
     private EditText mWeight;
 
-    private ProfileStatsFragment mAllTime;
-    private ProfileStatsFragment mAverageWeekly;
+    private ProfileStats mAllTimeStats;
+    private ProfileStats mAverageWeeklyStats;
 
     private HandlerThread mHandlerThread;
     private Handler mBroadcastHandler;
@@ -55,6 +60,16 @@ public class ProfileActivity extends AppCompatActivity
     private boolean mIsWorkoutStarted;
     private int mAddSteps;
     private int mAddTime;
+
+    private TextView mAllDistance;
+    private TextView mAllTime;
+    private TextView mAllWorkouts;
+    private TextView mAllCalories;
+
+    private TextView mAvgDistance;
+    private TextView mAvgTime;
+    private TextView mAvgWorkouts;
+    private TextView mAvgCalories;
 
 
     @Override
@@ -75,21 +90,28 @@ public class ProfileActivity extends AppCompatActivity
             mAddTime = 0;
         }
 
-        mAllTime = ProfileStatsFragment.newInstance();
-        mAverageWeekly = ProfileStatsFragment.newInstance();
+        mAllTimeStats = new ProfileStats("All Time");
+        mAverageWeeklyStats = new ProfileStats("Average/Weekly");
 
-        FragmentManager fm = getSupportFragmentManager();
-        loadFragment(fm, R.id.fragment_average_weekly_id, mAllTime, "All Time");
-        loadFragment(fm, R.id.fragment_all_time_id, mAverageWeekly, "Average/Weekly");
+        Resources r = getResources();
+        TextView titleAll = findViewById(R.id.title_text_view_id_1);
+        TextView titleAvg = findViewById(R.id.title_text_view_id_2);
+        titleAll.setText(r.getString(R.string.all_time));
+        titleAvg.setText(r.getString(R.string.average_weekly));
 
         getSupportLoaderManager().initLoader(0, null, this);
 
-        Resources r = getResources();
-
-        mName = (EditText) findViewById(R.id.name_edit_text_id);
-        mGender = (EditText) findViewById(R.id.gender_edit_text_id);
-        mWeight = (EditText) findViewById(R.id.weight_edit_text_id);
-
+        mName = findViewById(R.id.name_edit_text_id);
+        mGender = findViewById(R.id.gender_edit_text_id);
+        mWeight = findViewById(R.id.weight_edit_text_id);
+        mAllDistance = findViewById(R.id.distance_text_view_id_1);
+        mAllTime = findViewById(R.id.time_text_view_id_1);
+        mAllWorkouts = findViewById(R.id.workouts_text_view_id_1);
+        mAllCalories = findViewById(R.id.calories_text_view_id_1);
+        mAvgDistance = findViewById(R.id.distance_text_view_id_2);
+        mAvgTime = findViewById(R.id.time_text_view_id_2);
+        mAvgWorkouts = findViewById(R.id.workouts_text_view_id_2);
+        mAvgCalories = findViewById(R.id.calories_text_view_id_2);
 
         initializeHandlers();
         mReceiver = new BroadcastReceiver() {
@@ -98,6 +120,7 @@ public class ProfileActivity extends AppCompatActivity
                 handleWorkoutBroadcast(intent);
             }
         };
+        mName.requestFocus();
     }
 
     @Override
@@ -123,26 +146,6 @@ public class ProfileActivity extends AppCompatActivity
         finish();
         return true;
     }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        setSaveBundle(outState);
-    }
-
-    private void setSaveBundle(Bundle save) {
-        // may not need this
-    }
-    
-    private void loadFragment(FragmentManager fm, int containerId, Fragment fragment, String title) {
-        Bundle args = new Bundle();
-        args.putString(ProfileStatsFragment.ARG_TITLE, title);
-        fragment.setArguments(args);
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(containerId, fragment);
-        transaction.commit();
-    }
-
 
     private void saveProfileInformation() {
         SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences(
@@ -189,28 +192,34 @@ public class ProfileActivity extends AppCompatActivity
     }
 
 
-    private void updateAllTimeStats(ProfileStatsFragment fragment) {
+    private void updateStats(ProfileStats stats, TextView distance, TextView time,
+                             TextView workouts, TextView calories) {
+        updateDistance(distance, stats.getDistance(), "mi");
+        updateTime(time, stats.getTime());
+        updateWorkouts(workouts, stats.getNumWorkouts());
+        updateCalories(calories, stats.getNumCalories());
+    }
+
+    private void updateAllTimeStats() {
         if (mWorkoutHistory != null) {
             int totalSteps = mWorkoutHistory.getTotalSteps() + mAddSteps;
-            fragment.updateNumWorkouts(mWorkoutHistory.getNumWorkouts());
-            fragment.updateDistance(WorkoutMath.calculateDistanceInMiles(
-                    totalSteps,
-                    mWorkoutHistory.isMale()),
-                    "mi");
-            fragment.updateCaloriesBurned(WorkoutMath.calculateCaloriesBurned(
-                    totalSteps,
-                    getWeight(mWeight.getText().toString())
-            ));
-            fragment.updateTime(mWorkoutHistory.getTotalTime() + mAddTime);
+            updateStatsModel(mAllTimeStats,
+                    WorkoutMath.calculateDistanceInMiles(totalSteps,
+                            mWorkoutHistory.isMale()),
+                    mWorkoutHistory.getTotalTime(),
+                    mWorkoutHistory.getNumWorkouts(),
+                    WorkoutMath.calculateCaloriesBurned(totalSteps,
+                            getWeight(mWeight.getText().toString())));
+            updateStats(mAllTimeStats, mAllDistance, mAllTime,
+                    mAllWorkouts, mAllCalories);
         }
     }
 
-    private void updateAverageWeeklyStats(ProfileStatsFragment fragment) {
+    private void updateAverageWeeklyStats() {
         if (mWorkoutHistory != null) {
             long totalTime = mWorkoutHistory.getTotalTime() + mAddTime;
             int totalSteps = mWorkoutHistory.getTotalSteps() + mAddSteps;
             if (WorkoutMath.isLongerThanAWeek(totalTime)) {
-                // calculate the average weekly amounts
                 float numWeeks = mWorkoutHistory.getNumWeeks();
                 float totalDistanceInMiles = WorkoutMath.calculateDistanceInMiles(totalSteps,
                         mWorkoutHistory.isMale());
@@ -218,17 +227,49 @@ public class ProfileActivity extends AppCompatActivity
                         totalSteps,
                         getWeight(mWeight.getText().toString()));
                 float averageWeeklyDistance = totalDistanceInMiles / numWeeks;
-                int avgWeeklyCal = (int) (caloriesBurned / numWeeks);
                 int avgWeeklyTime =  (int) (totalTime / numWeeks);
                 int avgWeeklyWorkouts = (int) (mWorkoutHistory.getNumWorkouts() / numWeeks);
-                fragment.updateNumWorkouts(avgWeeklyWorkouts);
-                fragment.updateDistance(averageWeeklyDistance, "mi");
-                fragment.updateCaloriesBurned(avgWeeklyCal);
-                fragment.updateTime(avgWeeklyTime);
+                int avgWeeklyCal = (int) (caloriesBurned / numWeeks);
+                if (mAverageWeeklyStats == null) {
+                    mAverageWeeklyStats = new ProfileStats("Average/Weekly");
+                }
+                updateStatsModel(mAverageWeeklyStats, averageWeeklyDistance,
+                        avgWeeklyTime, avgWeeklyWorkouts, avgWeeklyCal);
+                updateStats(mAverageWeeklyStats, mAvgDistance, mAvgTime,
+                        mAvgWorkouts, mAvgCalories);
             } else {
-                updateAllTimeStats(mAverageWeekly);
+                updateStats(mAllTimeStats, mAvgDistance, mAvgTime,
+                        mAvgWorkouts, mAvgCalories);
             }
         }
+    }
+
+    private void updateDistance(TextView distanceTextView, float distance, String units) {
+        String format = String.format("%,.1f", distance);
+        distanceTextView.setText(format + " " + units);
+    }
+
+    private void updateTime(TextView timeTextView, int timeInSeconds) {
+        timeTextView.setText(
+                AlphaFitnessUtil.createTimeString(timeInSeconds));
+    }
+
+    private void updateWorkouts(TextView workoutsTextView, int numWorkouts) {
+        String formatted = NumberFormat.getInstance().format(numWorkouts);
+        workoutsTextView.setText(formatted + " times");
+    }
+
+    private void updateCalories(TextView caloriesTextView, int calories) {
+        String formatted = NumberFormat.getInstance().format(calories);
+        caloriesTextView.setText(formatted + " Cal");
+    }
+
+    private void updateStatsModel(ProfileStats stats, float newDistance,
+                                  int newTime, int newWorkouts, int newCalories) {
+        stats.setDistance(newDistance);
+        stats.setTime(newTime);
+        stats.setNumWorkouts(newWorkouts);
+        stats.setNumCalories(newCalories);
     }
 
     public static int getWeight(String weightStr) {
@@ -255,14 +296,14 @@ public class ProfileActivity extends AppCompatActivity
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-                updateAllTimeStats(mAllTime);
+                updateAllTimeStats();
             }
         });
 
         mMainHandler.post(new Runnable() {
             @Override
             public void run() {
-                updateAverageWeeklyStats(mAverageWeekly);
+                updateAverageWeeklyStats();
             }
         });
     }
@@ -310,8 +351,8 @@ public class ProfileActivity extends AppCompatActivity
             mWorkoutHistory.incNumWorkouts();
         }
         Log.d(TAG, "Workout History Total Time " + Long.toString(mWorkoutHistory.getTotalTime()));
-        updateAllTimeStats(mAllTime);
-        updateAverageWeeklyStats(mAverageWeekly);
+        updateAllTimeStats();
+        updateAverageWeeklyStats();
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.seanschlaefli.alphafitness.database.AlphaFitnessDbSchema;
 
@@ -92,8 +91,6 @@ public class FitnessContentProvider extends ContentProvider {
 
     @Override
     public String getType(Uri uri) {
-        // TODO: Implement this to handle requests for the MIME type of the data
-        // at the given URI.
         switch (uriMatcher.match(uri)) {
             case WORKOUT:
                 return "vnd.android.cursor.dir/vnd.seanschlaefli.workout";
@@ -110,7 +107,6 @@ public class FitnessContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
         Uri _uri = null;
         switch (uriMatcher.match(uri)) {
             case WORKOUT:
@@ -127,19 +123,14 @@ public class FitnessContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        // TODO: Implement this to initialize your content provider on startup.
-        Log.v(TAG, "FitnessContentProvider: onCreate()");
-
         mContext = getContext();
         if (mContext == null) {
-            Log.e(TAG, "Failed to retrieve a context");
             return false;
         }
 
         AlphaFitnessDatabaseHelper database = new AlphaFitnessDatabaseHelper(mContext);
         mDb = database.getWritableDatabase();
         if (mDb == null) {
-            Log.e(TAG, "Failed to retrieve the database");
             return false;
         }
         return true;
@@ -148,8 +139,6 @@ public class FitnessContentProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
-        Log.v(TAG, "FitnessContentProvider: query");
         Cursor c = null;
         switch (uriMatcher.match(uri)) {
             case WORKOUT:
@@ -170,7 +159,6 @@ public class FitnessContentProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
         int count = 0;
         String selStr = getSelStr(uri, selection);
         switch (uriMatcher.match(uri)) {

@@ -9,13 +9,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal">
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:background="@drawable/textlines_workout_details">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="60dp"
-            android:background="@drawable/textlines_workout_details">
+            android:background="@drawable/textlines_right">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -23,58 +25,69 @@
                 android:text="@string/workout_details"
                 android:textAlignment="center"
                 android:textSize="28sp"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp" />
         </LinearLayout>
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_weight="0.5"
-            android:background="@drawable/textlines_workout_details">
+            android:layout_weight="1"
+            android:background="@drawable/textlines_right">
 
             <TextView
+                android:id="@+id/avg_text_view_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="3dp"
                 android:text="@string/average"
                 android:textAlignment="center"
-                android:textSize="20sp"
-                android:layout_marginRight="3dp"
-                android:layout_marginLeft="3dp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/average_text_view_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_centerInParent="true"
                 android:text="@string/default_rate"
                 android:textAlignment="center"
                 android:textSize="32sp"
                 android:textStyle="bold"
-                android:layout_marginRight="14dp"
-                android:layout_marginLeft="14dp"/>
+                android:layout_toEndOf="@id/avg_text_view_id"
+                android:layout_toStartOf="@id/min_rate_text_view_id_1"/>
 
             <TextView
+                android:id="@+id/min_rate_text_view_id_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                android:text="@string/units_time_rate" />
-        </LinearLayout>
+                android:text="@string/units_time_rate"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_alignParentEnd="true"
+                android:gravity="center"
+                android:layout_alignParentBottom="true"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="60dp"
-            android:layout_weight="0.5"
-            android:orientation="vertical"
-            android:background="@drawable/textlines_workout_details">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:orientation="horizontal"
-                android:background="@drawable/textlines_workout_details">
+                android:background="@drawable/textlines_bottom">
 
                 <TextView
+                    android:id="@+id/max_text_view_id_2"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="3dp"
@@ -85,32 +98,38 @@
                     android:id="@+id/max_text_view_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_centerInParent="true"
                     android:text="@string/default_rate"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"/>
+                    android:layout_toEndOf="@+id/max_text_view_id_2"
+                    android:layout_toStartOf="@+id/max_min_mi_id"/>
 
                 <TextView
-                    android:layout_width="50dp"
+                    android:id="@+id/max_min_mi_id"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|bottom"
-                    android:text="@string/units_time_rate" />
+                    android:text="@string/units_time_rate"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="3dp"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:orientation="horizontal"
-                android:background="@drawable/textlines_workout_details">
+                android:background="@drawable/textlines_top">
 
                 <TextView
-                    android:layout_width="30dp"
+                    android:id="@+id/min_text_view_id_3"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="3dp"
                     android:text="@string/min"
                     android:textAlignment="center" />
 
@@ -118,21 +137,26 @@
                     android:id="@+id/min_text_view_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_centerInParent="true"
+                    android:paddingStart="7dp"
                     android:text="@string/default_rate"
                     android:textAlignment="center"
                     android:textSize="20sp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"/>
+                    android:layout_toEndOf="@+id/min_text_view_id_3"
+                    android:layout_toStartOf="@+id/min_min_mi_id"/>
 
                 <TextView
-                    android:layout_width="50dp"
+                    android:id="@+id/min_min_mi_id"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_gravity="center|bottom"
                     android:text="@string/units_time_rate"
-                    android:textAlignment="center" />
+                    android:textAlignment="center"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="3dp"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 

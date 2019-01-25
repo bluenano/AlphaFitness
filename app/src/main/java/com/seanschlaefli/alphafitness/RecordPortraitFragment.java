@@ -2,7 +2,6 @@ package com.seanschlaefli.alphafitness;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -11,13 +10,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -127,9 +124,6 @@ public class RecordPortraitFragment extends Fragment {
             @Override
             public void onMapReady(GoogleMap googleMap) {
                 mMap = googleMap;
-                Log.d(TAG, "Google Map is ready!");
-                // set starting location with a marker
-                // set current location with a marker
                 if (mIsRecording) {
                     updateMap(mLocations);
                 } else {
@@ -157,7 +151,6 @@ public class RecordPortraitFragment extends Fragment {
             mIsRecording = true;
             mCallback.workoutStarted(Calendar.getInstance().getTimeInMillis());
             mRecordButton.setText(getResources().getString(R.string.stop_workout));
-            Log.d(TAG, "Initializing map");
             initializeMap();
         }
     }
@@ -218,7 +211,6 @@ public class RecordPortraitFragment extends Fragment {
             updateMap(mLocations);
             showRoute();
         } else {
-            Log.d(TAG, "Displaying default map");
             displayDefaultMap();
         }
 
@@ -282,21 +274,19 @@ public class RecordPortraitFragment extends Fragment {
                         if (task.isSuccessful()) {
                             Location lastKnown = (Location) task.getResult();
                             if (lastKnown != null) {
-                                Log.d(TAG, "Moving camera to current location");
                                 LatLng current = new LatLng(lastKnown.getLatitude(),
                                         lastKnown.getLongitude());
                                 setCurrentLocation(current);
-                            } else {
-                                Log.d(TAG, "Last location is null");
                             }
-                        } else {
-                            Log.d(TAG, "Failed to get last known location");
                         }
                     }
                 });
             }
         } catch (SecurityException e) {
-            Log.d(TAG, "Do not have the appropriate permissions for this");
+            Toast.makeText(getActivity(),
+                    "Map cannot be displayed without granting location permissions in the settings",
+                    Toast.LENGTH_LONG).show();
+
         }
     }
 

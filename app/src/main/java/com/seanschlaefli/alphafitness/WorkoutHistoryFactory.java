@@ -1,7 +1,6 @@
 package com.seanschlaefli.alphafitness;
 
 import android.database.Cursor;
-import android.util.Log;
 
 import java.util.Calendar;
 
@@ -26,7 +25,6 @@ public class WorkoutHistoryFactory {
 
             } while (workoutData.moveToNext());
         }
-        Log.d(TAG, "Total number of workouts " + Integer.toString(numWorkouts));
         return new WorkoutHistory(numWorkouts, totalStepCount, totalTime,
                 isMale, start, Calendar.getInstance().getTimeInMillis());
     }

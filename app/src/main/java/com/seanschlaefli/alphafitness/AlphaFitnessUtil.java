@@ -5,6 +5,10 @@ import java.util.List;
 
 public class AlphaFitnessUtil {
 
+    private static final int SECONDS_IN_DAY = 86400;
+    private static final int SECONDS_IN_HOUR = 3600;
+    private static final int SECONDS_IN_MINUTE = 60;
+
     public static int[] convertIntList(List<Integer> intList) {
         if (intList == null) {
             return new int[0];
@@ -60,5 +64,41 @@ public class AlphaFitnessUtil {
             retList.add(f);
         }
         return retList;
+    }
+
+
+    public static String createTimeString(int timeInSeconds) {
+        String daysStr = "";
+        String hoursStr = "";
+        String minutesStr = "";
+        int days = getNumDays(timeInSeconds);
+        if (days > 0) {
+            timeInSeconds = timeInSeconds % SECONDS_IN_DAY;
+            daysStr = Integer.toString(days) + " day ";
+        }
+        int hours = getNumHours(timeInSeconds);
+        if (hours > 0) {
+            timeInSeconds = timeInSeconds % SECONDS_IN_HOUR;
+            hoursStr = Integer.toString(hours) + " hr ";
+        }
+        int minutes = getNumMinutes(timeInSeconds);
+        if (minutes > 0) {
+            timeInSeconds = timeInSeconds % SECONDS_IN_MINUTE;
+            minutesStr = Integer.toString(minutes) + " min ";
+        }
+        String secondsStr = Integer.toString(timeInSeconds) + " sec ";
+        return daysStr + hoursStr + minutesStr + secondsStr;
+    }
+
+    private static int getNumDays(int timeInSeconds) {
+        return timeInSeconds / SECONDS_IN_DAY;
+    }
+
+    private static int getNumHours(int timeInSeconds) {
+        return timeInSeconds / SECONDS_IN_HOUR;
+    }
+
+    private static int getNumMinutes(int timeInSeconds) {
+        return timeInSeconds / SECONDS_IN_MINUTE;
     }
 }
