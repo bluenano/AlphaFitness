@@ -71,34 +71,39 @@ public class AlphaFitnessUtil {
         String daysStr = "";
         String hoursStr = "";
         String minutesStr = "";
+        String secondsStr = "";
         int days = getNumDays(timeInSeconds);
         if (days > 0) {
             timeInSeconds = timeInSeconds % SECONDS_IN_DAY;
-            daysStr = Integer.toString(days) + " day ";
+            daysStr = Integer.toString(days) + " day";
         }
         int hours = getNumHours(timeInSeconds);
         if (hours > 0) {
             timeInSeconds = timeInSeconds % SECONDS_IN_HOUR;
-            hoursStr = Integer.toString(hours) + " hr ";
+            hoursStr = Integer.toString(hours) + " hr";
         }
         int minutes = getNumMinutes(timeInSeconds);
         if (minutes > 0) {
             timeInSeconds = timeInSeconds % SECONDS_IN_MINUTE;
-            minutesStr = Integer.toString(minutes) + " min ";
+            minutesStr = Integer.toString(minutes) + " min";
         }
-        String secondsStr = Integer.toString(timeInSeconds) + " sec ";
-        return daysStr + hoursStr + minutesStr + secondsStr;
+        if (timeInSeconds > 0) {
+            secondsStr = " " + Integer.toString(timeInSeconds) + " sec";
+        }
+        String result = daysStr + " " + hoursStr + " " +
+                minutesStr + " " + secondsStr;
+        return result.trim();
     }
 
-    private static int getNumDays(int timeInSeconds) {
+    static int getNumDays(int timeInSeconds) {
         return timeInSeconds / SECONDS_IN_DAY;
     }
 
-    private static int getNumHours(int timeInSeconds) {
+    static int getNumHours(int timeInSeconds) {
         return timeInSeconds / SECONDS_IN_HOUR;
     }
 
-    private static int getNumMinutes(int timeInSeconds) {
+    static int getNumMinutes(int timeInSeconds) {
         return timeInSeconds / SECONDS_IN_MINUTE;
     }
 }

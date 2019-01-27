@@ -20,10 +20,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:text="@string/workout_details"
                 android:textAlignment="center"
                 android:textSize="28sp"
-                android:layout_margin="10dp"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
 

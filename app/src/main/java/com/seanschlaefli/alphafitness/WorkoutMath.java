@@ -8,18 +8,18 @@ public class WorkoutMath {
 
     public static final String TAG = WorkoutMath.class.getSimpleName();
 
-    private static final float sMaleMultiplier = 2.5f;
-    private static final float sFemaleMultiplier = 2.2f;
+    static final float sMaleMultiplier = 2.5f;
+    static final float sFemaleMultiplier = 2.2f;
 
-    private static final long msInOneWeek = 604800000;
+    static final long msInOneWeek = 604800000;
 
-    private static final Integer[] WEIGHTS = new Integer[] {
+    static final Integer[] WEIGHTS = new Integer[] {
             100, 120, 140, 160, 180, 200, 220, 250, 275, 300
     };
 
     // estimates the amount of calories burned by walking 1000 steps
-    private static final Map<Integer, Integer> WEIGHT_TO_CALORIES;
-    private static final int STEPS = 1000;
+    static final Map<Integer, Integer> WEIGHT_TO_CALORIES;
+    static final int STEPS = 1000;
 
     static {
         Map<Integer, Integer> map = new HashMap<>();
@@ -56,7 +56,7 @@ public class WorkoutMath {
         return UnitConverter.ftToMiles(ft);
     }
 
-    private static int getWeightThreshold(int weight) {
+    public static int getWeightThreshold(int weight) {
         if (weight <= WEIGHTS[0]) {
             return WEIGHTS[0];
         }

@@ -20,7 +20,7 @@ import java.util.List;
 
 
 public class RecordActivity extends AppCompatActivity
-        implements RecordPortraitFragment.OnRecordChange {
+        implements RecordWorkoutFragment.OnRecordChange {
 
     public static final String TAG = RecordActivity.class.getSimpleName();
     private static final String IS_WORKOUT_STARTED_KEY = "is_workout_started";
@@ -46,8 +46,8 @@ public class RecordActivity extends AppCompatActivity
 
     private Workout mWorkout;
 
-    private RecordPortraitFragment mPortrait;
-    private RecordLandscapeFragment mLandscape;
+    private RecordWorkoutFragment mPortrait;
+    private WorkoutDetailsFragment mLandscape;
 
 
     @Override
@@ -138,12 +138,12 @@ public class RecordActivity extends AppCompatActivity
     }
 
     private void initializeFragments() {
-        mLandscape = RecordLandscapeFragment.newInstance();
-        mPortrait = RecordPortraitFragment.newInstance();
+        mLandscape = WorkoutDetailsFragment.newInstance();
+        mPortrait = RecordWorkoutFragment.newInstance();
 
         Bundle landscapeArgs = getLandscapeArgs(new Workout(mWorkout));
         Bundle portraitArgs = getPortraitArgs(new Workout(mWorkout));
-        portraitArgs.putBoolean(RecordPortraitFragment.RECORD_KEY, mIsWorkoutStarted);
+        portraitArgs.putBoolean(RecordWorkoutFragment.RECORD_KEY, mIsWorkoutStarted);
 
         mLandscape.setArguments(landscapeArgs);
         mPortrait.setArguments(portraitArgs);
@@ -180,34 +180,34 @@ public class RecordActivity extends AppCompatActivity
 
     private Bundle getPortraitArgs(Workout workout) {
         Bundle args = new Bundle();
-        args.putBoolean(RecordPortraitFragment.RECORD_KEY, mIsWorkoutStarted);
-        args.putFloat(RecordPortraitFragment.DISTANCE_KEY,
+        args.putBoolean(RecordWorkoutFragment.RECORD_KEY, mIsWorkoutStarted);
+        args.putFloat(RecordWorkoutFragment.DISTANCE_KEY,
                 WorkoutMath.calculateDistanceInMiles(
                 workout.getCurrentStepCount(),
                 workout.isMale()
         ));
-        args.putInt(RecordPortraitFragment.TIME_KEY,
+        args.putInt(RecordWorkoutFragment.TIME_KEY,
                 workout.getSeconds());
-        args.putParcelableArrayList(RecordPortraitFragment.LOCATIONS_KEY,
+        args.putParcelableArrayList(RecordWorkoutFragment.LOCATIONS_KEY,
                 (ArrayList<Location>) workout.getLocations());
         return args;
     }
 
     private Bundle getLandscapeArgs(Workout workout) {
         Bundle args = new Bundle();
-        args.putLong(RecordLandscapeFragment.START_TIME_KEY,
+        args.putLong(WorkoutDetailsFragment.START_TIME_KEY,
                 workout.getStartTime());
-        args.putFloat(RecordLandscapeFragment.AVG_RATE_KEY,
+        args.putFloat(WorkoutDetailsFragment.AVG_RATE_KEY,
                 workout.getAvgRate());
-        args.putFloat(RecordLandscapeFragment.MAX_RATE_KEY,
+        args.putFloat(WorkoutDetailsFragment.MAX_RATE_KEY,
                 workout.getMaxRate());
-        args.putFloat(RecordLandscapeFragment.MIN_RATE_KEY,
+        args.putFloat(WorkoutDetailsFragment.MIN_RATE_KEY,
                 workout.getMinRate());
-        args.putFloatArray(RecordLandscapeFragment.STEPS_PER_MIN_KEY,
+        args.putFloatArray(WorkoutDetailsFragment.STEPS_PER_MIN_KEY,
                 AlphaFitnessUtil.convertFloatList(workout.getStepsPerMinute()));
-        args.putIntArray(RecordLandscapeFragment.CALORIES_BURNED_KEY,
+        args.putIntArray(WorkoutDetailsFragment.CALORIES_BURNED_KEY,
                 AlphaFitnessUtil.convertIntList(workout.getCaloriesBurned(mWeight)));
-        args.putLongArray(RecordLandscapeFragment.RATES_RECORD_TIMES_KEY,
+        args.putLongArray(WorkoutDetailsFragment.RATES_RECORD_TIMES_KEY,
                 AlphaFitnessUtil.convertLongList(workout.getRatesRecordTimes()));
         return args;
     }

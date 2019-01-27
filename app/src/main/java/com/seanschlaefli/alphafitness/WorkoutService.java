@@ -23,7 +23,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 public class WorkoutService extends Service {
 
@@ -51,7 +50,6 @@ public class WorkoutService extends Service {
     private LocationCallback mLocationCallback;
 
     private RecordRunnable mRecordRunnable;
-    private WorkoutSimulationTask mSimulation;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -69,9 +67,6 @@ public class WorkoutService extends Service {
         super.onDestroy();
         if (mFusedLocationClient != null) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-        }
-        if (mSimulation != null) {
-            mSimulation.terminate();
         }
         if (mRecordRunnable != null) {
             mRecordRunnable.terminate();
@@ -114,14 +109,6 @@ public class WorkoutService extends Service {
         };
 
 
-        SensorManager sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor stepCounter = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        if (stepCounter == null) {
-            mSimulation = new WorkoutSimulationTask();
-            Thread thread = new Thread(mSimulation);
-            thread.start();
-            return;
-        }
 
         setLocationRequest();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -157,9 +144,14 @@ public class WorkoutService extends Service {
                 }
             }
         };
-
         startLocationUpdates();
-        sm.registerListener(stepListener, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+
+        SensorManager sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Sensor stepCounter = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (stepCounter != null) {
+            sm.registerListener(stepListener, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+
         mRecordRunnable = new RecordRunnable();
         Thread thread = new Thread(mRecordRunnable);
         thread.start();
@@ -225,42 +217,5 @@ public class WorkoutService extends Service {
 
     }
 
-
-    public class WorkoutSimulationTask implements Runnable {
-
-        private int mStepCount = 0;
-        private Random mRand = new Random();
-        private volatile boolean mRunFlag = true;
-
-        @Override
-        public void run() {
-            mStepCount = (int) generateFloat(0.5f, 1000.0f);
-            mWorkout.addStepCount(mStepCount, Calendar.getInstance().getTimeInMillis());
-            while (mRunFlag) {
-                float current = generateFloat(3.5f, 4.0f);
-                mStepCount += (int) current;
-                mWorkout.addStepCount(mStepCount, Calendar.getInstance().getTimeInMillis());
-                mWorkout.updateRates(WorkoutMath.calculateAvgRateInMinPerMile(mWorkout.getCurrentStepCount(),
-                        mWorkout.getTotalTime(), mWorkout.isMale()));
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-
-                }
-                mWorkout.incSeconds();
-                broadcastWorkout(mWorkout);
-            }
-        }
-
-        public void terminate() {
-            mRunFlag = false;
-        }
-
-
-        public float generateFloat(float min, float max) {
-            return mRand.nextFloat() * (max - min) + min;
-        }
-
-    }
 
 }
