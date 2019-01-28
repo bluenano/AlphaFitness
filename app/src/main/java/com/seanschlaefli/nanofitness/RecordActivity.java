@@ -1,4 +1,4 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -128,13 +128,13 @@ public class RecordActivity extends AppCompatActivity
         outState.putFloat(MAX_RATE_KEY, workout.getMaxRate());
         outState.putFloat(MIN_RATE_KEY, workout.getMinRate());
         outState.putIntArray(STEP_COUNTS_KEY,
-                AlphaFitnessUtil.convertIntList(workout.getStepCounts()));
+                NanoFitnessUtil.convertIntList(workout.getStepCounts()));
         outState.putLongArray(STEP_COUNTS_RECORD_TIMES_KEY,
-                AlphaFitnessUtil.convertLongList(workout.getStepCountRecordTimes()));
+                NanoFitnessUtil.convertLongList(workout.getStepCountRecordTimes()));
         outState.putParcelableArrayList(LOCATIONS_KEY,
                 (ArrayList<Location>) workout.getLocations());
         outState.putLongArray(LOCATIONS_RECORD_TIMES_KEY,
-                AlphaFitnessUtil.convertLongList(workout.getLocationRecordTimes()));
+                NanoFitnessUtil.convertLongList(workout.getLocationRecordTimes()));
     }
 
     private void initializeFragments() {
@@ -166,13 +166,13 @@ public class RecordActivity extends AppCompatActivity
                 inState.getFloat(AVG_RATE_KEY),
                 inState.getFloat(MAX_RATE_KEY),
                 inState.getFloat(MIN_RATE_KEY),
-                AlphaFitnessUtil.convertIntArray(
+                NanoFitnessUtil.convertIntArray(
                         inState.getIntArray(STEP_COUNTS_KEY)),
-                AlphaFitnessUtil.convertLongArray(
+                NanoFitnessUtil.convertLongArray(
                         inState.getLongArray(STEP_COUNTS_RECORD_TIMES_KEY)),
                 inState.<Location>getParcelableArrayList(
                         LOCATIONS_KEY),
-                AlphaFitnessUtil.convertLongArray(
+                NanoFitnessUtil.convertLongArray(
                         inState.getLongArray(LOCATIONS_RECORD_TIMES_KEY)
                 )
         );
@@ -204,11 +204,11 @@ public class RecordActivity extends AppCompatActivity
         args.putFloat(WorkoutDetailsFragment.MIN_RATE_KEY,
                 workout.getMinRate());
         args.putFloatArray(WorkoutDetailsFragment.STEPS_PER_MIN_KEY,
-                AlphaFitnessUtil.convertFloatList(workout.getStepsPerMinute()));
+                NanoFitnessUtil.convertFloatList(workout.getStepsPerMinute()));
         args.putIntArray(WorkoutDetailsFragment.CALORIES_BURNED_KEY,
-                AlphaFitnessUtil.convertIntList(workout.getCaloriesBurned(mWeight)));
+                NanoFitnessUtil.convertIntList(workout.getCaloriesBurned(mWeight)));
         args.putLongArray(WorkoutDetailsFragment.RATES_RECORD_TIMES_KEY,
-                AlphaFitnessUtil.convertLongList(workout.getRatesRecordTimes()));
+                NanoFitnessUtil.convertLongList(workout.getRatesRecordTimes()));
         return args;
     }
 
@@ -282,7 +282,7 @@ public class RecordActivity extends AppCompatActivity
             }
 
             if (intent.hasExtra(WorkoutService.EXTRA_STEP_COUNTS_TIME)) {
-                ArrayList<Long> stepCountsRecordTimes = AlphaFitnessUtil
+                ArrayList<Long> stepCountsRecordTimes = NanoFitnessUtil
                         .convertLongArray(intent.getLongArrayExtra(
                                 WorkoutService.EXTRA_STEP_COUNTS_TIME
                         ));
@@ -298,7 +298,7 @@ public class RecordActivity extends AppCompatActivity
             }
 
             if (intent.hasExtra(WorkoutService.EXTRA_LOCATIONS_TIME)) {
-                ArrayList<Long> locationsRecordTimes = AlphaFitnessUtil
+                ArrayList<Long> locationsRecordTimes = NanoFitnessUtil
                         .convertLongArray(intent.getLongArrayExtra(
                                 WorkoutService.EXTRA_LOCATIONS_TIME
                         ));

@@ -1,4 +1,4 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import java.util.Collections;
 import java.util.HashMap;

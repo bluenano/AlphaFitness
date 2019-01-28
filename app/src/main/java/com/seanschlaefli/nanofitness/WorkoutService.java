@@ -1,4 +1,4 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import android.Manifest;
 import android.app.Service;
@@ -167,9 +167,9 @@ public class WorkoutService extends Service {
         intent.putExtra(EXTRA_MAX_RATE, workout.getMaxRate());
         intent.putExtra(EXTRA_MIN_RATE, workout.getMinRate());
         intent.putIntegerArrayListExtra(EXTRA_STEP_COUNTS, (ArrayList<Integer>) workout.getStepCounts());
-        intent.putExtra(EXTRA_STEP_COUNTS_TIME, AlphaFitnessUtil.convertLongList(workout.getStepCountRecordTimes()));
+        intent.putExtra(EXTRA_STEP_COUNTS_TIME, NanoFitnessUtil.convertLongList(workout.getStepCountRecordTimes()));
         intent.putParcelableArrayListExtra(EXTRA_LOCATIONS, (ArrayList<Location>) workout.getLocations());
-        intent.putExtra(EXTRA_LOCATIONS_TIME, AlphaFitnessUtil.convertLongList(workout.getLocationRecordTimes()));
+        intent.putExtra(EXTRA_LOCATIONS_TIME, NanoFitnessUtil.convertLongList(workout.getLocationRecordTimes()));
         sendBroadcast(intent);
 
     }

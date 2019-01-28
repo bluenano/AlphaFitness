@@ -1,4 +1,4 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import android.content.ContentProvider;
 import android.content.ContentResolver;
@@ -14,7 +14,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.seanschlaefli.alphafitness.database.AlphaFitnessDbSchema;
+import com.seanschlaefli.nanofitness.database.AlphaFitnessDbSchema;
 
 import java.util.HashMap;
 

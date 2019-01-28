@@ -1,9 +1,9 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlphaFitnessUtil {
+public class NanoFitnessUtil {
 
     private static final int SECONDS_IN_DAY = 86400;
     private static final int SECONDS_IN_HOUR = 3600;

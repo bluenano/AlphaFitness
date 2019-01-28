@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.seanschlaefli.alphafitness">
+    package="com.seanschlaefli.nanofitness">
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -49,7 +49,7 @@
 
         <provider
             android:name=".FitnessContentProvider"
-            android:authorities="com.seanschlaefli.alphafitness"
+            android:authorities="com.seanschlaefli.nanofitness"
             android:enabled="true"
             android:exported="true"/>
     </application>

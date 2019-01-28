@@ -1,10 +1,10 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import static com.seanschlaefli.alphafitness.WorkoutMath.*;
+import static com.seanschlaefli.nanofitness.WorkoutMath.*;
 
 public class WorkoutMathTest {
 

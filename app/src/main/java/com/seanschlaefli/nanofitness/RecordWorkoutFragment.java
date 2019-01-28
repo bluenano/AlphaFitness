@@ -1,4 +1,4 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import android.app.Activity;
 import android.content.Context;

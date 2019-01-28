@@ -1,4 +1,4 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
@@ -87,9 +87,9 @@ public class WorkoutDetailsFragment extends Fragment {
             if (stepsPerMinArr != null &&
                     caloriesArr != null &&
                     ratesRecordTimesArr != null) {
-                stepsPerMin = AlphaFitnessUtil.convertFloatArray(stepsPerMinArr);
-                caloriesBurned = AlphaFitnessUtil.convertIntArray(caloriesArr);
-                ratesRecordTimes = AlphaFitnessUtil.convertLongArray(ratesRecordTimesArr);
+                stepsPerMin = NanoFitnessUtil.convertFloatArray(stepsPerMinArr);
+                caloriesBurned = NanoFitnessUtil.convertIntArray(caloriesArr);
+                ratesRecordTimes = NanoFitnessUtil.convertLongArray(ratesRecordTimesArr);
             }
             updateAvgRate(args.getFloat(AVG_RATE_KEY));
             updateMaxRate(args.getFloat(MAX_RATE_KEY));
@@ -183,6 +183,7 @@ public class WorkoutDetailsFragment extends Fragment {
         List<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(mBarData);
         BarData data = new BarData(dataSets);
+        mBarChart.getXAxis().setDrawGridLines(false);
         mBarChart.getDescription().setText(BAR_CHART_DESC);
         mBarChart.setData(data);
         mBarChart.invalidate();
@@ -193,6 +194,7 @@ public class WorkoutDetailsFragment extends Fragment {
         List<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(mLineData);
         LineData data = new LineData(dataSets);
+        mLineChart.getXAxis().setDrawGridLines(false);
         mLineChart.getDescription().setText(LINE_CHART_DESC);
         mLineChart.setData(data);
         mLineChart.invalidate();

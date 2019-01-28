@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AlphaFitness</string>
+    <string name="app_name">NanoFitness</string>
     <string name="title_activity_maps">Map</string>
     <string name="record_workout">Record Workout</string>
     <string name="distance">DISTANCE</string>

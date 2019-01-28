@@ -1,4 +1,4 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -246,7 +246,7 @@ public class ProfileActivity extends AppCompatActivity
 
     private void updateTime(TextView timeTextView, int timeInSeconds) {
         timeTextView.setText(
-                AlphaFitnessUtil.createTimeString(timeInSeconds));
+                NanoFitnessUtil.createTimeString(timeInSeconds));
     }
 
     private void updateWorkouts(TextView workoutsTextView, int numWorkouts) {

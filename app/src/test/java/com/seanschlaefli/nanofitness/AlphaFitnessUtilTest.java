@@ -1,4 +1,4 @@
-package com.seanschlaefli.alphafitness;
+package com.seanschlaefli.nanofitness;
 
 import org.junit.Test;
 
@@ -57,7 +57,7 @@ public class AlphaFitnessUtilTest {
 
     @Test
     public void convertIntList() {
-        int[] converted = AlphaFitnessUtil.convertIntList(intList);
+        int[] converted = NanoFitnessUtil.convertIntList(intList);
         assertEquals(converted.length, intArr.length);
         for (int i = 0; i < converted.length; i++) {
             assertEquals(converted[i], intArr[i]);
@@ -66,7 +66,7 @@ public class AlphaFitnessUtilTest {
 
     @Test
     public void convertLongList() {
-        long[] converted = AlphaFitnessUtil.convertLongList(longList);
+        long[] converted = NanoFitnessUtil.convertLongList(longList);
         assertEquals(converted.length, longArr.length);
         for (int i = 0; i < converted.length; i++) {
             assertEquals(converted[i], longArr[i]);
@@ -75,7 +75,7 @@ public class AlphaFitnessUtilTest {
 
     @Test
     public void convertFloatList() {
-        float[] converted = AlphaFitnessUtil.convertFloatList(floatList);
+        float[] converted = NanoFitnessUtil.convertFloatList(floatList);
         assertEquals(converted.length, floatArr.length);
         for (int i = 0; i < converted.length; i++) {
             assertEquals(converted[i], floatArr[i], 0.5f);
@@ -84,7 +84,7 @@ public class AlphaFitnessUtilTest {
 
     @Test
     public void convertIntArray() {
-        List<Integer> converted = AlphaFitnessUtil.convertIntArray(intArr);
+        List<Integer> converted = NanoFitnessUtil.convertIntArray(intArr);
         assertEquals(converted.size(), SIZE);
         for (int i = 0; i < converted.size(); i++) {
             assertEquals(converted.get(i), intList.get(i));
@@ -93,7 +93,7 @@ public class AlphaFitnessUtilTest {
 
     @Test
     public void convertLongArray() {
-        List<Long> converted = AlphaFitnessUtil.convertLongArray(longArr);
+        List<Long> converted = NanoFitnessUtil.convertLongArray(longArr);
         assertEquals(converted.size(), SIZE);
         for (int i = 0; i < converted.size(); i++) {
             assertEquals(converted.get(i), longList.get(i));
@@ -102,7 +102,7 @@ public class AlphaFitnessUtilTest {
 
     @Test
     public void convertFloatArray() {
-        List<Float> converted = AlphaFitnessUtil.convertFloatArray(floatArr);
+        List<Float> converted = NanoFitnessUtil.convertFloatArray(floatArr);
         assertEquals(converted.size(), SIZE);
         for (int i = 0; i < converted.size(); i++) {
             assertEquals(converted.get(i), floatList.get(i));
@@ -111,10 +111,10 @@ public class AlphaFitnessUtilTest {
 
     @Test
     public void createTimeString() {
-        String oneDay = AlphaFitnessUtil.createTimeString(SECONDS_PER_DAY);
-        String oneHour = AlphaFitnessUtil.createTimeString(SECONDS_PER_HOUR);
-        String oneMinute = AlphaFitnessUtil.createTimeString(SECONDS_PER_MINUTE);
-        String oneDayOneHourOneMinute = AlphaFitnessUtil.createTimeString(
+        String oneDay = NanoFitnessUtil.createTimeString(SECONDS_PER_DAY);
+        String oneHour = NanoFitnessUtil.createTimeString(SECONDS_PER_HOUR);
+        String oneMinute = NanoFitnessUtil.createTimeString(SECONDS_PER_MINUTE);
+        String oneDayOneHourOneMinute = NanoFitnessUtil.createTimeString(
                 SECONDS_PER_DAY + SECONDS_PER_HOUR + SECONDS_PER_MINUTE
         );
         assertEquals(oneDay, "1 day");
@@ -125,19 +125,19 @@ public class AlphaFitnessUtilTest {
 
     @Test
     public void getNumDays() {
-        int numDays = AlphaFitnessUtil.getNumDays(SECONDS_PER_DAY);
+        int numDays = NanoFitnessUtil.getNumDays(SECONDS_PER_DAY);
         assertEquals(numDays, 1);
     }
 
     @Test
     public void getNumHours() {
-        int numHours = AlphaFitnessUtil.getNumHours(SECONDS_PER_HOUR);
+        int numHours = NanoFitnessUtil.getNumHours(SECONDS_PER_HOUR);
         assertEquals(numHours, 1);
     }
 
     @Test
     public void getNumMinutes() {
-        int numMinutes = AlphaFitnessUtil.getNumMinutes(SECONDS_PER_MINUTE);
+        int numMinutes = NanoFitnessUtil.getNumMinutes(SECONDS_PER_MINUTE);
         assertEquals(numMinutes, 1);
     }
 }

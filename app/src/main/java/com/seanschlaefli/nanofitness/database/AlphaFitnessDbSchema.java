@@ -1,4 +1,4 @@
-package com.seanschlaefli.alphafitness.database;
+package com.seanschlaefli.nanofitness.database;
 
 public class AlphaFitnessDbSchema {
 
