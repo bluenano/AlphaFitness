@@ -1,4 +1,4 @@
-# AlphaFitness
+# NanoFitness
 
  Mobile application that helps users keep track of statistics gathered from working out
 

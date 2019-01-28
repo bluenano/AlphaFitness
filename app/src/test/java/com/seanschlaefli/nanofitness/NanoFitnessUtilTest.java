@@ -78,7 +78,7 @@ public class AlphaFitnessUtilTest {
         float[] converted = NanoFitnessUtil.convertFloatList(floatList);
         assertEquals(converted.length, floatArr.length);
         for (int i = 0; i < converted.length; i++) {
-            assertEquals(converted[i], floatArr[i], 0.5f);
+            assertEquals(converted[i], floatArr[i], 0.001f);
         }
     }
 
