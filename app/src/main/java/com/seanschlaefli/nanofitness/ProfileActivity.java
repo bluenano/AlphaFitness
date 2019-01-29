@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 
 public class ProfileActivity extends AppCompatActivity
@@ -240,13 +241,13 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     private void updateDistance(TextView distanceTextView, float distance, String units) {
-        String format = String.format("%,.1f", distance);
+        String format = String.format(Locale.US, "%,.1f", distance);
         distanceTextView.setText(format + " " + units);
     }
 
     private void updateTime(TextView timeTextView, int timeInSeconds) {
         timeTextView.setText(
-                NanoFitnessUtil.createTimeString(timeInSeconds));
+                NanoFitnessUtil.createTimeStringFromSeconds(timeInSeconds));
     }
 
     private void updateWorkouts(TextView workoutsTextView, int numWorkouts) {

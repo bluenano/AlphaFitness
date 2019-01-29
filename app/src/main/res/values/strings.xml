@@ -30,4 +30,9 @@
     <string name="average">AVG</string>
     <string name="units_time_rate">min/mi</string>
     <string name="profile">Access Profile</string>
+    <string name="bar_graph_label">Calories Burned</string>
+    <plurals name="line_chart_label">
+        <item quantity="one">Steps Per %d Minute</item>
+        <item quantity="few">"Steps Per %d Minutes</item>
+    </plurals>
 </resources>

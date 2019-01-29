@@ -2,6 +2,7 @@ package com.seanschlaefli.nanofitness;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class NanoFitnessUtil {
 
@@ -67,7 +68,7 @@ public class NanoFitnessUtil {
     }
 
 
-    public static String createTimeString(int timeInSeconds) {
+    public static String createTimeStringFromSeconds(int timeInSeconds) {
         String daysStr = "";
         String hoursStr = "";
         String minutesStr = "";
@@ -105,5 +106,11 @@ public class NanoFitnessUtil {
 
     static int getNumMinutes(int timeInSeconds) {
         return timeInSeconds / SECONDS_IN_MINUTE;
+    }
+
+    public static String createTimeStringFromRate(float rate) {
+        double decimal = rate - Math.floor(rate);
+        int seconds = (int) (decimal * 60);
+        return String.format(Locale.US, "%d:%02d", (int) rate, seconds);
     }
 }

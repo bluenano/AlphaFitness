@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class AlphaFitnessUtilTest {
+public class NanoFitnessUtilTest {
 
     private static int[] intArr;
     private static long[] longArr;
@@ -111,10 +111,10 @@ public class AlphaFitnessUtilTest {
 
     @Test
     public void createTimeString() {
-        String oneDay = NanoFitnessUtil.createTimeString(SECONDS_PER_DAY);
-        String oneHour = NanoFitnessUtil.createTimeString(SECONDS_PER_HOUR);
-        String oneMinute = NanoFitnessUtil.createTimeString(SECONDS_PER_MINUTE);
-        String oneDayOneHourOneMinute = NanoFitnessUtil.createTimeString(
+        String oneDay = NanoFitnessUtil.createTimeStringFromSeconds(SECONDS_PER_DAY);
+        String oneHour = NanoFitnessUtil.createTimeStringFromSeconds(SECONDS_PER_HOUR);
+        String oneMinute = NanoFitnessUtil.createTimeStringFromSeconds(SECONDS_PER_MINUTE);
+        String oneDayOneHourOneMinute = NanoFitnessUtil.createTimeStringFromSeconds(
                 SECONDS_PER_DAY + SECONDS_PER_HOUR + SECONDS_PER_MINUTE
         );
         assertEquals(oneDay, "1 day");

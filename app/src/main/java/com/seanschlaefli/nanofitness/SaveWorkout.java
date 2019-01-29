@@ -7,14 +7,14 @@ import android.location.Location;
 
 import java.util.List;
 
-public class SaveWorkoutThread extends Thread {
+public class SaveWorkout extends Thread {
 
-    public static final String TAG = SaveWorkoutThread.class.getSimpleName();
+    public static final String TAG = SaveWorkout.class.getSimpleName();
 
     private Context mContext;
     private Workout mWorkout;
 
-    public SaveWorkoutThread(Context context, Workout workout) {
+    public SaveWorkout(Context context, Workout workout) {
         mContext = context;
         mWorkout = workout;
     }
@@ -63,5 +63,9 @@ public class SaveWorkoutThread extends Thread {
                 recordTime);
         values.put(FitnessContentProvider.LOCATION_PROVIDER,
                 location.getProvider());
+        mContext.getContentResolver().insert(
+                FitnessContentProvider.URI_LOCATION,
+                values
+        );
     }
 }

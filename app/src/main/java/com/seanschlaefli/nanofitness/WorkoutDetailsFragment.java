@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class WorkoutDetailsFragment extends Fragment {
 
@@ -105,15 +106,18 @@ public class WorkoutDetailsFragment extends Fragment {
     }
 
     public void updateAvgRate(float newRate) {
-        mAvgRate.setText(createTimeString(newRate));
+        mAvgRate.setText(
+                NanoFitnessUtil.createTimeStringFromRate(newRate));
     }
 
     public void updateMinRate(float newRate) {
-        mMinRate.setText(createTimeString(newRate));
+        mMinRate.setText(
+                NanoFitnessUtil.createTimeStringFromRate(newRate));
     }
 
     public void updateMaxRate(float newRate) {
-        mMaxRate.setText(createTimeString(newRate));
+        mMaxRate.setText(
+                NanoFitnessUtil.createTimeStringFromRate(newRate));
     }
 
     public void updateGraphs(List<Float> stepsPerMin,
@@ -155,7 +159,7 @@ public class WorkoutDetailsFragment extends Fragment {
                 values.add(new BarEntry(timeInMinutes, calories));
             }
         }
-        mBarData = new BarDataSet(values, "Calories Burned");
+        mBarData = new BarDataSet(values, getResources().getString(R.string.bar_graph_label));
         setBarChartData();
     }
 
@@ -174,8 +178,10 @@ public class WorkoutDetailsFragment extends Fragment {
             }
 
         }
-        mLineData = new LineDataSet(values, "Steps Per " +
-                Integer.toString(scalar) + " Minutes");
+        mLineData = new LineDataSet(values,
+                getResources().getQuantityString(R.plurals.line_chart_label,
+                        SCALAR,
+                        SCALAR));
         setLineChartData();
     }
 
@@ -198,12 +204,5 @@ public class WorkoutDetailsFragment extends Fragment {
         mLineChart.getDescription().setText(LINE_CHART_DESC);
         mLineChart.setData(data);
         mLineChart.invalidate();
-    }
-
-    private String createTimeString(float rate) {
-        double decimal = rate - Math.floor(rate);
-        int seconds = (int) (decimal * 60);
-        String format = String.format("%d:%02d", (int) rate, seconds);
-        return format;
     }
 }

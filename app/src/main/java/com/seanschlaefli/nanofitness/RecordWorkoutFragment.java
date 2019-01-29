@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.Task;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class RecordWorkoutFragment extends Fragment {
 
@@ -181,7 +182,7 @@ public class RecordWorkoutFragment extends Fragment {
     }
 
     public void updateDistance(float distance) {
-        mDistance.setText(String.format("%.1f", distance));
+        mDistance.setText(String.format(Locale.US, "%.1f", distance));
     }
 
     public void updateDuration(int duration) {
@@ -201,7 +202,7 @@ public class RecordWorkoutFragment extends Fragment {
         timeInSeconds = timeInSeconds % 3600;
         int minutes = timeInSeconds / 60;
         int seconds = timeInSeconds % 60;
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
 

@@ -22,8 +22,4 @@ public class UnitConverter {
         return ((float) milliseconds / 60000f);
     }
 
-    public static void main(String[] args) {
-        System.out.println(Float.toString(msToMinutes(5483881)));
-    }
-
 }

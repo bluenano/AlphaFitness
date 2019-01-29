@@ -24,6 +24,21 @@ public class Workout {
     private List<Location> mLocations;
     private List<Long> mLocationRecordTimes;
 
+    public Workout() {
+        mId = UUID.randomUUID();
+        mStepCounts = new ArrayList<>();
+        mStepCountRecordTimes = new ArrayList<>();
+        mLocations = new ArrayList<>();
+        mLocationRecordTimes = new ArrayList<>();
+        mStartTime = 0;
+        mEndTime = 0;
+        mSeconds = 0;
+        mIsMale = false;
+        mAvgRate = null;
+        mMinRate = null;
+        mMaxRate = null;
+    }
+
     public Workout(boolean isMale) {
         mId = UUID.randomUUID();
         mStepCounts = new ArrayList<>();

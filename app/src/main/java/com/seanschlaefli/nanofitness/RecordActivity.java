@@ -383,7 +383,7 @@ public class RecordActivity extends AppCompatActivity
     }
 
     private void saveWorkout(Workout workout) {
-        SaveWorkoutThread thread = new SaveWorkoutThread(
+        SaveWorkout thread = new SaveWorkout(
                 getApplicationContext(),
                 workout);
         thread.start();

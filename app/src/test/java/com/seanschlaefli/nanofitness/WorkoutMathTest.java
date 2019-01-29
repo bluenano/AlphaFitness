@@ -8,23 +8,35 @@ import static com.seanschlaefli.nanofitness.WorkoutMath.*;
 
 public class WorkoutMathTest {
 
-    private static int weight = 160;
-    private static int expectedCalories = 44;
-
     @Test
     public void calculateCaloriesBurned() {
+        int weight = 160;
+        int expectedCalories = 44;
         int caloriesBurned = WorkoutMath.calculateCaloriesBurned(STEPS, weight);
-        assertEquals(caloriesBurned, expectedCalories);
+        assertEquals(expectedCalories, caloriesBurned);
     }
 
     @Test
     public void calculateAvgRateInMinPerMile() {
-
+        int totalSteps = 1000;
+        long totalTimeInMs = 120_000;
+        float expectedAvgRateMale = 4.2f;
+        float expectedAvgRateFemale = 4.8f;
+        float maleResult = WorkoutMath.calculateAvgRateInMinPerMile(totalSteps, totalTimeInMs, true);
+        float femaleResult = WorkoutMath.calculateAvgRateInMinPerMile(totalSteps, totalTimeInMs, false);
+        assertEquals(expectedAvgRateMale, maleResult, 0.1);
+        assertEquals(expectedAvgRateFemale, femaleResult, 0.1);
     }
 
     @Test
     public void calculateDistanceInMiles() {
-
+        int totalSteps = 1000;
+        float expectedDistanceMale = 0.47f;
+        float expectedDistanceFemale = 0.41f;
+        float maleResult = WorkoutMath.calculateDistanceInMiles(totalSteps, true);
+        float femaleResult = WorkoutMath.calculateDistanceInMiles(totalSteps, false);
+        assertEquals(expectedDistanceMale, maleResult, 0.1);
+        assertEquals(expectedDistanceFemale, femaleResult, 0.1);
     }
 
     @Test
