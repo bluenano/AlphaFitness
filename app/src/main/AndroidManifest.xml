@@ -13,13 +13,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_app_release_round"
+        android:icon="@mipmap/ic_nanofitness_round"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_app_release_round"
+        android:roundIcon="@mipmap/ic_nanofitness_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:versionCode="1"
-        android:versionName="1.0.0-rc">
+        android:versionName="1.0">
         <activity android:name=".RecordActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
