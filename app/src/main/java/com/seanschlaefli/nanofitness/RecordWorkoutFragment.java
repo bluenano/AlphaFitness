@@ -6,10 +6,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,9 +74,9 @@ public class RecordWorkoutFragment extends Fragment {
         void startProfileActivity(boolean isRecording);
     }
 
-    @Nullable
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_workout, container, false);
 
         getLocationPermission();
@@ -120,18 +120,21 @@ public class RecordWorkoutFragment extends Fragment {
             mMapFragment = SupportMapFragment.newInstance();
         }
 
-        getChildFragmentManager().beginTransaction().replace(R.id.map_id, mMapFragment).commit();
-        mMapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                mMap = googleMap;
-                if (mIsRecording) {
-                    updateMap(mLocations);
-                } else {
-                    displayDefaultMap();
+        FragmentManager fm = getFragmentManager();
+        if (fm != null) {
+            fm.beginTransaction().add(R.id.map_id, mMapFragment).commit();
+            mMapFragment.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    mMap = googleMap;
+                    if (mIsRecording) {
+                        updateMap(mLocations);
+                    } else {
+                        displayDefaultMap();
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return v;
     }
@@ -269,19 +272,21 @@ public class RecordWorkoutFragment extends Fragment {
                         LocationServices.getFusedLocationProviderClient(mContext);
                 final Task locationResult = locationProviderClient.getLastLocation();
                 Activity activity = getActivity();
-                locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
-                    @Override
-                    public void onComplete(@NonNull Task task) {
-                        if (task.isSuccessful()) {
-                            Location lastKnown = (Location) task.getResult();
-                            if (lastKnown != null) {
-                                LatLng current = new LatLng(lastKnown.getLatitude(),
-                                        lastKnown.getLongitude());
-                                setCurrentLocation(current);
+                if (activity != null) {
+                    locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
+                        @Override
+                        public void onComplete(Task task) {
+                            if (task.isSuccessful()) {
+                                Location lastKnown = (Location) task.getResult();
+                                if (lastKnown != null) {
+                                    LatLng current = new LatLng(lastKnown.getLatitude(),
+                                            lastKnown.getLongitude());
+                                    setCurrentLocation(current);
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
             }
         } catch (SecurityException e) {
             Toast.makeText(getActivity(),

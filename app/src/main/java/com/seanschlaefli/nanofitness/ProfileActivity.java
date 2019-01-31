@@ -6,18 +6,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,8 +18,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 
-public class ProfileActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ProfileActivity extends AppCompatActivity {
 
     public static final String TAG = ProfileActivity.class.getSimpleName();
 
@@ -94,8 +86,6 @@ public class ProfileActivity extends AppCompatActivity
         TextView titleAvg = findViewById(R.id.title_text_view_id_2);
         titleAll.setText(r.getString(R.string.all_time));
         titleAvg.setText(r.getString(R.string.average_weekly));
-
-        getSupportLoaderManager().initLoader(0, null, this);
 
         mName = findViewById(R.id.name_edit_text_id);
         mGender = findViewById(R.id.gender_edit_text_id);
@@ -322,36 +312,8 @@ public class ProfileActivity extends AppCompatActivity
 
     private void styleActionbar() {
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayOptions(R.layout.action_bar_profile);
         ab.setCustomView(R.layout.action_bar_profile);
         ab.setDisplayHomeAsUpEnabled(true);
     }
-    
-    @NonNull
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        return new CursorLoader(
-                this,
-                FitnessContentProvider.URI_WORKOUT,
-                null,
-                null,
-                null,
-                FitnessContentProvider.START_TIME + " ASC"
-        );
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        mWorkoutHistory = WorkoutHistoryFactory.from(data, isMale(mGender.getText().toString()));
-        if (mIsWorkoutStarted) {
-            mWorkoutHistory.incNumWorkouts();
-        }
-        Log.d(TAG, "Workout History Total Time " + Long.toString(mWorkoutHistory.getTotalTime()));
-        updateAllTimeStats();
-        updateAverageWeeklyStats();
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Cursor> loader) {}
 
 }

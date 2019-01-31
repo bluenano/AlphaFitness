@@ -9,10 +9,10 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -48,6 +48,7 @@ public class RecordActivity extends AppCompatActivity
 
     private RecordWorkoutFragment mPortrait;
     private WorkoutDetailsFragment mLandscape;
+
 
 
     @Override
@@ -392,8 +393,9 @@ public class RecordActivity extends AppCompatActivity
 
     private void styleActionbar() {
         ActionBar ab = getSupportActionBar();
-        ab.setDisplayOptions(R.layout.action_bar_record);
-        ab.setCustomView(R.layout.action_bar_record);
-        ab.setDisplayHomeAsUpEnabled(false);
+        if (ab != null) {
+            ab.setCustomView(R.layout.action_bar_record);
+            ab.setDisplayHomeAsUpEnabled(false);
+        }
     }
 }
