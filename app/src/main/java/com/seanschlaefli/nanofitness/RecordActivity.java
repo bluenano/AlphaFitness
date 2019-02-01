@@ -394,6 +394,7 @@ public class RecordActivity extends AppCompatActivity
     private void styleActionbar() {
         ActionBar ab = getSupportActionBar();
         if (ab != null) {
+            ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             ab.setCustomView(R.layout.action_bar_record);
             ab.setDisplayHomeAsUpEnabled(false);
         }

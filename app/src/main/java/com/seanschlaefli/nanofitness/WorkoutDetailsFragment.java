@@ -23,7 +23,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class WorkoutDetailsFragment extends Fragment {
 
@@ -174,10 +173,13 @@ public class WorkoutDetailsFragment extends Fragment {
             }
 
         }
-        mLineData = new LineDataSet(values,
+        // Can't get this to work after migrating to AndroidX
+       /* mLineData = new LineDataSet(values,
                 getResources().getQuantityString(R.plurals.line_chart_label,
                         SCALAR,
-                        SCALAR));
+                        SCALAR));*/
+        mLineData = new LineDataSet(values,
+                "Steps Per " + Integer.toString(SCALAR) + " Minutes");
         setLineChartData();
     }
 

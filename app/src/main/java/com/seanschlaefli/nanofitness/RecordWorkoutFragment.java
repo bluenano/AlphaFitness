@@ -2,12 +2,13 @@ package com.seanschlaefli.nanofitness;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
@@ -29,8 +30,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,7 +50,6 @@ public class RecordWorkoutFragment extends Fragment {
     private static final int START_MARK_COLOR = Color.BLACK;
     private static final int CURRENT_MARK_COLOR = Color.RED;
 
-    private boolean mLocationPermissionGranted;
     private SupportMapFragment mMapFragment;
     private GoogleMap mMap;
     private List<Location> mLocations;
@@ -74,12 +73,10 @@ public class RecordWorkoutFragment extends Fragment {
         void startProfileActivity(boolean isRecording);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_workout, container, false);
 
-        getLocationPermission();
         ImageButton profileButton = v.findViewById(R.id.profile_button_id);
         mRecordButton = v.findViewById(R.id.record_button_id);
         mDistance = v.findViewById(R.id.distance_id);
@@ -152,10 +149,20 @@ public class RecordWorkoutFragment extends Fragment {
             mRecordButton.setText(getResources().getString(R.string.start_workout));
         } else {
             resetMap();
-            mIsRecording = true;
-            mCallback.workoutStarted(Calendar.getInstance().getTimeInMillis());
-            mRecordButton.setText(getResources().getString(R.string.stop_workout));
-            initializeMap();
+            Activity activity = getActivity();
+            if (activity != null) {
+                boolean locationPermission = hasLocationPermission();
+                boolean sensorRequired = hasRequiredSensor();
+                if (locationPermission && sensorRequired) {
+                    mIsRecording = true;
+                    mCallback.workoutStarted(Calendar.getInstance().getTimeInMillis());
+                    mRecordButton.setText(getResources().getString(R.string.stop_workout));
+                    initializeMap();
+                } else {
+                    displayToast(locationPermission, sensorRequired);
+                }
+            }
+
         }
     }
 
@@ -166,22 +173,23 @@ public class RecordWorkoutFragment extends Fragment {
         mContext = context;
     }
 
-    private void getLocationPermission() {
-        Context context = getActivity();
-        if (context != null) {
-            if (ContextCompat.checkSelfPermission(getActivity(),
-                    android.Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                mLocationPermissionGranted = true;
-            } else {
-                mLocationPermissionGranted = false;
-                Toast.makeText(context,
-                        "Grant Location Permission to Enable Location Service",
-                        Toast.LENGTH_LONG).show();
-            }
-        } else {
-            mLocationPermissionGranted = false;
+    private boolean hasLocationPermission() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            PermissionManager manager = new PermissionManager(activity);
+            return manager.hasLocationPermission();
         }
+        return false;
+    }
+
+    private boolean hasRequiredSensor() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            SensorManager sm = (SensorManager) activity.getSystemService(Context.SENSOR_SERVICE);
+            Sensor stepCounter = sm.getDefaultSensor(WorkoutService.SENSOR_FOR_STEPS);
+            return stepCounter != null;
+        }
+        return false;
     }
 
     public void updateDistance(float distance) {
@@ -189,7 +197,8 @@ public class RecordWorkoutFragment extends Fragment {
     }
 
     public void updateDuration(int duration) {
-        mDuration.setText(createTimeString(duration));
+        mDuration.setText(
+                NanoFitnessUtil.createWorkoutTimeString(duration));
     }
 
     private void setRecordText() {
@@ -198,14 +207,6 @@ public class RecordWorkoutFragment extends Fragment {
         } else {
             mRecordButton.setText(getResources().getString(R.string.start_workout));
         }
-    }
-
-    public String createTimeString(int timeInSeconds) {
-        int hours = timeInSeconds / 3600;
-        timeInSeconds = timeInSeconds % 3600;
-        int minutes = timeInSeconds / 60;
-        int seconds = timeInSeconds % 60;
-        return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
 
@@ -267,32 +268,30 @@ public class RecordWorkoutFragment extends Fragment {
 
     private void displayDefaultMap() {
         try {
-            if (mLocationPermissionGranted) {
+            if (hasLocationPermission()) {
                 FusedLocationProviderClient locationProviderClient =
                         LocationServices.getFusedLocationProviderClient(mContext);
-                final Task locationResult = locationProviderClient.getLastLocation();
                 Activity activity = getActivity();
                 if (activity != null) {
-                    locationResult.addOnCompleteListener(getActivity(), new OnCompleteListener() {
-                        @Override
-                        public void onComplete(Task task) {
-                            if (task.isSuccessful()) {
-                                Location lastKnown = (Location) task.getResult();
-                                if (lastKnown != null) {
-                                    LatLng current = new LatLng(lastKnown.getLatitude(),
-                                            lastKnown.getLongitude());
-                                    setCurrentLocation(current);
+                    locationProviderClient.getLastLocation().addOnSuccessListener(
+                            activity,
+                            new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    if (location != null) {
+                                        LatLng current = new LatLng(location.getLatitude(),
+                                                location.getLongitude());
+                                        setCurrentLocation(current);
+                                    }
                                 }
                             }
-                        }
-                    });
+                    );
                 }
             }
         } catch (SecurityException e) {
             Toast.makeText(getActivity(),
                     "Map cannot be displayed without granting location permissions in the settings",
                     Toast.LENGTH_LONG).show();
-
         }
     }
 
@@ -313,6 +312,18 @@ public class RecordWorkoutFragment extends Fragment {
     private void removeMarker(Circle mark) {
         if (mark != null) {
             mark.remove();
+        }
+    }
+
+    private void displayToast(boolean locationPermission, boolean sensorRequired) {
+        if (!locationPermission) {
+            Toast.makeText(getActivity(),
+                    "Grant location permissions in the settings",
+                    Toast.LENGTH_LONG).show();
+        } else if (!sensorRequired) {
+            Toast.makeText(getActivity(),
+                    "Device does not contain the required sensor for recording workouts",
+                    Toast.LENGTH_LONG).show();
         }
     }
 

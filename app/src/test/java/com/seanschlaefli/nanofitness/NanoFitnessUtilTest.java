@@ -111,10 +111,10 @@ public class NanoFitnessUtilTest {
 
     @Test
     public void createTimeString() {
-        String oneDay = NanoFitnessUtil.createTimeStringFromSeconds(SECONDS_PER_DAY);
-        String oneHour = NanoFitnessUtil.createTimeStringFromSeconds(SECONDS_PER_HOUR);
-        String oneMinute = NanoFitnessUtil.createTimeStringFromSeconds(SECONDS_PER_MINUTE);
-        String oneDayOneHourOneMinute = NanoFitnessUtil.createTimeStringFromSeconds(
+        String oneDay = NanoFitnessUtil.createProfileTimeString(SECONDS_PER_DAY);
+        String oneHour = NanoFitnessUtil.createProfileTimeString(SECONDS_PER_HOUR);
+        String oneMinute = NanoFitnessUtil.createProfileTimeString(SECONDS_PER_MINUTE);
+        String oneDayOneHourOneMinute = NanoFitnessUtil.createProfileTimeString(
                 SECONDS_PER_DAY + SECONDS_PER_HOUR + SECONDS_PER_MINUTE
         );
         assertEquals(oneDay, "1 day");

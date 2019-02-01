@@ -68,7 +68,15 @@ public class NanoFitnessUtil {
     }
 
 
-    public static String createTimeStringFromSeconds(int timeInSeconds) {
+    public static String createWorkoutTimeString(int timeInSeconds) {
+        int hours = timeInSeconds / 3600;
+        timeInSeconds = timeInSeconds % 3600;
+        int minutes = timeInSeconds / 60;
+        int seconds = timeInSeconds % 60;
+        return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public static String createProfileTimeString(int timeInSeconds) {
         String daysStr = "";
         String hoursStr = "";
         String minutesStr = "";

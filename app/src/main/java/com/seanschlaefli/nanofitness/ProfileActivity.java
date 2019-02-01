@@ -237,7 +237,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateTime(TextView timeTextView, int timeInSeconds) {
         timeTextView.setText(
-                NanoFitnessUtil.createTimeStringFromSeconds(timeInSeconds));
+                NanoFitnessUtil.createProfileTimeString(timeInSeconds));
     }
 
     private void updateWorkouts(TextView workoutsTextView, int numWorkouts) {
@@ -312,8 +312,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void styleActionbar() {
         ActionBar ab = getSupportActionBar();
-        ab.setCustomView(R.layout.action_bar_profile);
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) {
+            ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+            ab.setCustomView(R.layout.action_bar_profile);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
 }

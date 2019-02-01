@@ -39,6 +39,7 @@ public class WorkoutService extends Service {
     public static final String EXTRA_LOCATIONS = "locations";
     public static final String EXTRA_LOCATIONS_TIME = "locations_time";
 
+    public static final int SENSOR_FOR_STEPS = Sensor.TYPE_STEP_COUNTER;
     public Context mContext;
 
     private Workout mWorkout;
@@ -65,7 +66,7 @@ public class WorkoutService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mFusedLocationClient != null) {
+        if (mFusedLocationClient != null && mLocationCallback != null) {
             mFusedLocationClient.removeLocationUpdates(mLocationCallback);
         }
         if (mRecordRunnable != null) {
@@ -114,40 +115,40 @@ public class WorkoutService extends Service {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         if (ActivityCompat.checkSelfPermission(mContext,
                 Manifest.permission.ACCESS_FINE_LOCATION)
-                !=
+                ==
                 PackageManager.PERMISSION_GRANTED) {
-            return;
+
+            mFusedLocationClient.getLastLocation()
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                mWorkout.addLocation(location, Calendar.getInstance().getTimeInMillis());
+                            }
+                        }
+                    });
+
+            mLocationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(LocationResult locationResult) {
+                    if (locationResult == null) {
+                        return;
+                    }
+                    List<Location> locations = locationResult.getLocations();
+                    if (locations.size() == 0) {
+                        return;
+                    }
+                    for (Location location: locations) {
+                        mWorkout.addLocation(location, Calendar.getInstance().getTimeInMillis());
+                    }
+                }
+            };
+            startLocationUpdates();
         }
 
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            mWorkout.addLocation(location, Calendar.getInstance().getTimeInMillis());
-                        }
-                    }
-                });
-
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                List<Location> locations = locationResult.getLocations();
-                if (locations.size() == 0) {
-                    return;
-                }
-                for (Location location: locations) {
-                    mWorkout.addLocation(location, Calendar.getInstance().getTimeInMillis());
-                }
-            }
-        };
-        startLocationUpdates();
 
         SensorManager sm = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor stepCounter = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        Sensor stepCounter = sm.getDefaultSensor(SENSOR_FOR_STEPS);
         if (stepCounter != null) {
             sm.registerListener(stepListener, stepCounter, SensorManager.SENSOR_DELAY_NORMAL);
         }
@@ -182,17 +183,13 @@ public class WorkoutService extends Service {
     }
 
     private void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(mContext,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                !=
-                PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        mFusedLocationClient.requestLocationUpdates(
-                mLocationRequest,
-                mLocationCallback,
-                null
-        );
+        try {
+            mFusedLocationClient.requestLocationUpdates(
+                    mLocationRequest,
+                    mLocationCallback,
+                    null
+            );
+        } catch (SecurityException e) {} // find out best practice to handle this
     }
 
 
