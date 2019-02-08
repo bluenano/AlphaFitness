@@ -16,20 +16,30 @@ import androidx.room.PrimaryKey;
 public class StepRecord {
 
     public StepRecord(int workoutId, int recordStep, long recordTime) {
-        this.workoutId = workoutId;
-        this.recordStep = recordStep;
-        this.recordTime = recordTime;
+        mWorkoutId = workoutId;
+        mRecordStep = recordStep;
+        mRecordTime = recordTime;
     }
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public int mId;
 
     @ColumnInfo(name = "workout_id")
-    public int workoutId;
+    public int mWorkoutId;
 
     @ColumnInfo(name = "record_step")
-    public int recordStep;
+    public int mRecordStep;
 
     @ColumnInfo(name = "record_time")
-    public long recordTime;
+    public long mRecordTime;
+
+    @Ignore
+    public int getStep() {
+        return mRecordStep;
+    }
+
+    @Ignore
+    public long getTime() {
+        return mRecordTime;
+    }
 }

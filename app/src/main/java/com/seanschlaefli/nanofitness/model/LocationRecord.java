@@ -1,8 +1,14 @@
 package com.seanschlaefli.nanofitness.model;
 
+import android.location.Location;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -15,28 +21,36 @@ public class LocationRecord {
 
     public LocationRecord(int workoutId, double latitude, double longitude,
                           long recordTime, String locationProvider) {
-        this.workoutId = workoutId;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.recordTime = recordTime;
-        this.locationProvider = locationProvider;
+        mWorkoutId = workoutId;
+        mLatitude = latitude;
+        mLongitude = longitude;
+        mRecordTime = recordTime;
+        mLocationProvider = locationProvider;
     }
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public int mId;
 
     @ColumnInfo(name = "workout_id")
-    public int workoutId;
+    public int mWorkoutId;
 
-    @ColumnInfo(name = "latitude")
-    public double latitude;
+    @ColumnInfo(name = "mLatitude")
+    public double mLatitude;
 
-    @ColumnInfo(name = "longitude")
-    public double longitude;
+    @ColumnInfo(name = "mLongitude")
+    public double mLongitude;
 
     @ColumnInfo(name = "record_time")
-    public long recordTime;
+    public long mRecordTime;
 
     @ColumnInfo(name = "location_provider")
-    public String locationProvider;
+    public String mLocationProvider;
+
+    @Ignore
+    public Location getLocation() {
+        Location location = new Location(mLocationProvider);
+        location.setLatitude(mLatitude);
+        location.setLongitude(mLongitude);
+        return location;
+    }
 }

@@ -57,17 +57,17 @@ public class LocationRecordDaoTest {
         int id = (int) locationRecordDao.insert(record);
         List<LocationRecord> records = locationRecordDao.getAll();
         assertEquals(records.size(), 1);
-        assertEquals(records.get(0).latitude, expectedLatitude, 0.01);
-        assertEquals(records.get(0).longitude, expectedLongitude, 0.01);
-        assertEquals(records.get(0).recordTime, expectedTime);
-        assertEquals(records.get(0).locationProvider, expectedProvider);
-        assertEquals(records.get(0).workoutId, workoutId);
+        assertEquals(records.get(0).mLatitude, expectedLatitude, 0.01);
+        assertEquals(records.get(0).mLongitude, expectedLongitude, 0.01);
+        assertEquals(records.get(0).mRecordTime, expectedTime);
+        assertEquals(records.get(0).mLocationProvider, expectedProvider);
+        assertEquals(records.get(0).mWorkoutId, workoutId);
         LocationRecord result = locationRecordDao.loadById(id);
-        assertEquals(result.latitude, expectedLatitude, 0.01);
-        assertEquals(result.longitude, expectedLongitude, 0.01);
-        assertEquals(result.recordTime, expectedTime);
-        assertEquals(result.locationProvider, expectedProvider);
-        assertEquals(result.workoutId, workoutId);
+        assertEquals(result.mLatitude, expectedLatitude, 0.01);
+        assertEquals(result.mLongitude, expectedLongitude, 0.01);
+        assertEquals(result.mRecordTime, expectedTime);
+        assertEquals(result.mLocationProvider, expectedProvider);
+        assertEquals(result.mWorkoutId, workoutId);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class LocationRecordDaoTest {
         LocationRecord record = TestUtil.createLocationRecord(workoutId, expectedLatitude,
                 expectedLongitude, expectedTime, expectedProvider);
         int id = (int) locationRecordDao.insert(record);
-        record.id = id;
+        record.mId = id;
         locationRecordDao.delete(record);
         List<LocationRecord> records = locationRecordDao.getAll();
         assertEquals(records.size(), 0);
@@ -90,14 +90,14 @@ public class LocationRecordDaoTest {
         LocationRecord record = TestUtil.createLocationRecord(workoutId, expectedLatitude,
                 expectedLongitude, expectedTime, expectedProvider);
         int id = (int) locationRecordDao.insert(record);
-        record.id = id;
-        record.recordTime = expectedTime + 10;
+        record.mId = id;
+        record.mRecordTime = expectedTime + 10;
         locationRecordDao.update(record);
-        LocationRecord result = locationRecordDao.loadById(record.id);
-        assertEquals(result.latitude, expectedLatitude, 0.01);
-        assertEquals(result.longitude, expectedLongitude, 0.01);
-        assertEquals(result.recordTime, expectedTime + 10);
-        assertEquals(result.locationProvider, expectedProvider);
-        assertEquals(result.workoutId, workoutId);
+        LocationRecord result = locationRecordDao.loadById(record.mId);
+        assertEquals(result.mLatitude, expectedLatitude, 0.01);
+        assertEquals(result.mLongitude, expectedLongitude, 0.01);
+        assertEquals(result.mRecordTime, expectedTime + 10);
+        assertEquals(result.mLocationProvider, expectedProvider);
+        assertEquals(result.mWorkoutId, workoutId);
     }
 }

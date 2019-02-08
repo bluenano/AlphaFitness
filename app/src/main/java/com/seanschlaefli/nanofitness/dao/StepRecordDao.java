@@ -4,6 +4,7 @@ import com.seanschlaefli.nanofitness.model.StepRecord;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -23,11 +24,11 @@ public interface StepRecordDao {
     void delete(StepRecord stepRecord);
 
     @Query("SELECT * FROM steprecord")
-    List<StepRecord> getAll();
+    LiveData<List<StepRecord>> getAll();
 
     @Query("SELECT * FROM steprecord WHERE workout_id=:workoutId ORDER BY record_step ASC")
-    List<StepRecord> loadByWorkoutId(final int workoutId);
+    LiveData<List<StepRecord>> loadByWorkoutId(final int workoutId);
 
-    @Query("SELECT * FROM steprecord WHERE id=:stepRecordId")
-    StepRecord loadById(int stepRecordId);
+    @Query("SELECT * FROM steprecord WHERE mId=:stepRecordId")
+    LiveData<StepRecord> loadById(int stepRecordId);
 }

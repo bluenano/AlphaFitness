@@ -1,4 +1,4 @@
-package com.seanschlaefli.nanofitness;
+package com.seanschlaefli.nanofitness.util;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,18 +8,18 @@ public class WorkoutMath {
 
     public static final String TAG = WorkoutMath.class.getSimpleName();
 
-    static final float sMaleMultiplier = 2.5f;
-    static final float sFemaleMultiplier = 2.2f;
+    private static final float sMaleMultiplier = 2.5f;
+    private static final float sFemaleMultiplier = 2.2f;
 
-    static final long msInOneWeek = 604800000;
+    public static final long msInOneWeek = 604800000;
 
-    static final Integer[] WEIGHTS = new Integer[] {
+    private static final Integer[] WEIGHTS = new Integer[] {
             100, 120, 140, 160, 180, 200, 220, 250, 275, 300
     };
 
     // estimates the amount of calories burned by walking 1000 steps
-    static final Map<Integer, Integer> WEIGHT_TO_CALORIES;
-    static final int STEPS = 1000;
+    private static final Map<Integer, Integer> WEIGHT_TO_CALORIES;
+    public static final int STEPS = 1000;
 
     static {
         Map<Integer, Integer> map = new HashMap<>();

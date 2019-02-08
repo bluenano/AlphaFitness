@@ -1,7 +1,8 @@
-package com.seanschlaefli.nanofitness;
+package com.seanschlaefli.nanofitness.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.seanschlaefli.nanofitness.util.TimeFormatter;
+import com.seanschlaefli.nanofitness.util.PermissionManager;
+import com.seanschlaefli.nanofitness.R;
+import com.seanschlaefli.nanofitness.service.WorkoutService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,9 +47,6 @@ public class RecordWorkoutFragment extends Fragment {
 
     public static final String TAG = RecordWorkoutFragment.class.getSimpleName();
     public static final String RECORD_KEY = "is_workout_started_key";
-    public static final String DISTANCE_KEY = "workout_distance_key";
-    public static final String TIME_KEY = "workout_time_key";
-    public static final String LOCATIONS_KEY = "locations_key";
 
     private static final int DEFAULT_ZOOM = 15;
     private static final int DEFAULT_CIRCLE_SIZE = 10;
@@ -52,7 +55,6 @@ public class RecordWorkoutFragment extends Fragment {
 
     private SupportMapFragment mMapFragment;
     private GoogleMap mMap;
-    private List<Location> mLocations;
 
     private Button mRecordButton;
     private TextView mDistance;
@@ -75,6 +77,7 @@ public class RecordWorkoutFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(TAG, "In RecordWorkoutFragment onCreateView");
         View v = inflater.inflate(R.layout.fragment_workout, container, false);
 
         ImageButton profileButton = v.findViewById(R.id.profile_button_id);
@@ -94,12 +97,8 @@ public class RecordWorkoutFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             mIsRecording = args.getBoolean(RECORD_KEY);
-            distance = args.getFloat(DISTANCE_KEY);
-            seconds = args.getInt(TIME_KEY);
-            mLocations = args.getParcelableArrayList(LOCATIONS_KEY);
         } else {
             mIsRecording = false;
-            mLocations = new ArrayList<>();
         }
 
         setRecordText();
@@ -116,7 +115,26 @@ public class RecordWorkoutFragment extends Fragment {
         if (mMapFragment == null) {
             mMapFragment = SupportMapFragment.newInstance();
         }
+        loadMap();
 
+        return v;
+    }
+
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        int current = getResources().getConfiguration().orientation;
+        if (current == Configuration.ORIENTATION_PORTRAIT) {
+            loadMap();
+        }
+    }
+
+    public static RecordWorkoutFragment newInstance() {
+        return new RecordWorkoutFragment();
+    }
+
+    private void loadMap() {
         FragmentManager fm = getFragmentManager();
         if (fm != null) {
             fm.beginTransaction().add(R.id.map_id, mMapFragment).commit();
@@ -124,23 +142,13 @@ public class RecordWorkoutFragment extends Fragment {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
                     mMap = googleMap;
-                    if (mIsRecording) {
-                        updateMap(mLocations);
-                    } else {
+                    if (!mIsRecording) {
                         displayDefaultMap();
                     }
                 }
             });
         }
-
-        return v;
     }
-
-
-    public static RecordWorkoutFragment newInstance() {
-        return new RecordWorkoutFragment();
-    }
-
 
     private void handleRecordStateChange() {
         if (mIsRecording) {
@@ -151,6 +159,11 @@ public class RecordWorkoutFragment extends Fragment {
             resetMap();
             Activity activity = getActivity();
             if (activity != null) {
+                mIsRecording = true;
+                mCallback.workoutStarted(Calendar.getInstance().getTimeInMillis());
+                mRecordButton.setText(getResources().getString(R.string.stop_workout));
+                initializeMap();
+                /*
                 boolean locationPermission = hasLocationPermission();
                 boolean sensorRequired = hasRequiredSensor();
                 if (locationPermission && sensorRequired) {
@@ -161,6 +174,7 @@ public class RecordWorkoutFragment extends Fragment {
                 } else {
                     displayToast(locationPermission, sensorRequired);
                 }
+                */
             }
 
         }
@@ -198,7 +212,7 @@ public class RecordWorkoutFragment extends Fragment {
 
     public void updateDuration(int duration) {
         mDuration.setText(
-                NanoFitnessUtil.createWorkoutTimeString(duration));
+                TimeFormatter.createWorkoutTimeString(duration));
     }
 
     private void setRecordText() {
@@ -211,14 +225,14 @@ public class RecordWorkoutFragment extends Fragment {
 
 
     private void initializeMap() {
+        /*
         int size = mLocations.size();
         if (mIsRecording && size > 0) {
-            updateMap(mLocations);
             showRoute();
         } else {
             displayDefaultMap();
         }
-
+        */
     }
 
     private void resetMap() {
@@ -226,25 +240,23 @@ public class RecordWorkoutFragment extends Fragment {
         mStartingLocation = null;
         mCurrentLocation = null;
         mRoute = null;
-        mLocations = new ArrayList<>();
     }
 
     public void updateMap(List<Location> locations) {
-        mLocations = new ArrayList<>(locations);
-        int size = mLocations.size();
+        int size = locations.size();
         if (size > 0) {
-            Location start = mLocations.get(0);
-            Location end = mLocations.get(size-1);
+            Location start = locations.get(0);
+            Location end = locations.get(size-1);
             setStartingLocation(new LatLng(start.getLatitude(),
                     start.getLongitude()));
             setCurrentLocation(new LatLng(end.getLatitude(),
                     end.getLongitude()));
-            showRoute();
+            showRoute(locations);
         }
     }
 
-    private void showRoute() {
-        ArrayList<LatLng> routePoints = getRoutePoints();
+    private void showRoute(List<Location> locations) {
+        ArrayList<LatLng> routePoints = getRoutePoints(locations);
         mRoute = mMap.addPolyline(new PolylineOptions()
                 .addAll(routePoints));
         mRoute.setTag("Route");
@@ -258,9 +270,9 @@ public class RecordWorkoutFragment extends Fragment {
                 .fillColor(color);
     }
 
-    private ArrayList<LatLng> getRoutePoints() {
+    private ArrayList<LatLng> getRoutePoints(List<Location> locations) {
         ArrayList<LatLng> routePoints = new ArrayList<>();
-        for (Location location: mLocations) {
+        for (Location location: locations) {
             routePoints.add(new LatLng(location.getLatitude(), location.getLongitude()));
         }
         return routePoints;

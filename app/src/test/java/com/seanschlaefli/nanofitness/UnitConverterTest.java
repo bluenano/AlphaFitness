@@ -1,5 +1,7 @@
 package com.seanschlaefli.nanofitness;
 
+import com.seanschlaefli.nanofitness.util.UnitConverter;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;

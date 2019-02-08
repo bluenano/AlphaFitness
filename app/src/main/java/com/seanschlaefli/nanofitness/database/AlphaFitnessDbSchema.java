@@ -24,8 +24,8 @@ public class AlphaFitnessDbSchema {
         public static final class Cols {
             public static final String ID = "_id";
             public static final String WORKOUT_UUID = "workout_uuid";
-            public static final String LATITUDE = "latitude";
-            public static final String LONGITUDE = "longitude";
+            public static final String LATITUDE = "mLatitude";
+            public static final String LONGITUDE = "mLongitude";
             public static final String RECORD_TIME = "record_time";
             public static final String LOCATION_PROVIDER = "provider";
         }

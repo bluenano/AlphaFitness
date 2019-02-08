@@ -51,18 +51,18 @@ public class StepRecordDaoTest {
         int id = (int) stepRecordDao.insert(record);
         List<StepRecord> records = stepRecordDao.getAll();
         assertEquals(records.size(), 1);
-        assertEquals(records.get(0).recordStep, expectedStepRecord);
-        assertEquals(records.get(0).recordTime, expectedRecordTime);
+        assertEquals(records.get(0).mRecordStep, expectedStepRecord);
+        assertEquals(records.get(0).mRecordTime, expectedRecordTime);
         StepRecord result = stepRecordDao.loadById(id);
-        assertEquals(result.recordStep, expectedStepRecord);
-        assertEquals(result.recordTime, expectedRecordTime);
+        assertEquals(result.mRecordStep, expectedStepRecord);
+        assertEquals(result.mRecordTime, expectedRecordTime);
     }
 
     @Test
     public void deleteSingleStepRecord() {
         int workoutId = getWorkoutId();
         StepRecord record = TestUtil.createStepRecord(workoutId, expectedStepRecord, expectedRecordTime);
-        record.id = (int) stepRecordDao.insert(record);
+        record.mId = (int) stepRecordDao.insert(record);
         stepRecordDao.delete(record);
         List<StepRecord> records = stepRecordDao.getAll();
         assertEquals(records.size(), 0);
@@ -73,14 +73,14 @@ public class StepRecordDaoTest {
         int workoutId = getWorkoutId();
         StepRecord record = TestUtil.createStepRecord(workoutId, expectedStepRecord, expectedRecordTime);
         int id = (int) stepRecordDao.insert(record);
-        record.id = id;
-        record.recordStep = expectedStepRecord + 10;
+        record.mId = id;
+        record.mRecordStep = expectedStepRecord + 10;
         stepRecordDao.update(record);
         StepRecord updated = stepRecordDao.loadById(id);
-        assertEquals(updated.id, id);
-        assertEquals(updated.recordStep, expectedStepRecord + 10);
-        assertEquals(updated.recordTime, expectedRecordTime);
-        assertEquals(updated.workoutId, workoutId);
+        assertEquals(updated.mId, id);
+        assertEquals(updated.mRecordStep, expectedStepRecord + 10);
+        assertEquals(updated.mRecordTime, expectedRecordTime);
+        assertEquals(updated.mWorkoutId, workoutId);
     }
 
     private int getWorkoutId() {

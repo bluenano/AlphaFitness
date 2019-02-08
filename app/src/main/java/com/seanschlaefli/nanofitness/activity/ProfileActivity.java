@@ -1,37 +1,44 @@
-package com.seanschlaefli.nanofitness;
+package com.seanschlaefli.nanofitness.activity;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.Handler;
-import android.os.HandlerThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.seanschlaefli.nanofitness.util.TimeFormatter;
+import com.seanschlaefli.nanofitness.ProfileStats;
+import com.seanschlaefli.nanofitness.R;
+import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.viewmodel.WorkoutViewModel;
+
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity
+    implements OnWorkoutLoadComplete {
 
     public static final String TAG = ProfileActivity.class.getSimpleName();
 
-    public static final String EXTRA_IS_RECORDING = "is_recording";
-    public static final String EXTRA_ADD_STEPS = "step_count";
-    public static final String EXTRA_ADD_TIME = "total_time";
+    public static final String EXTRA_WORKOUT_ID = "workout_id_extra";
+
     public static final String NAME_KEY = "name_key";
     public static final String GENDER_KEY = "gender_key";
     public static final String WEIGHT_KEY = "weight_key";
 
     public static final int DEFAULT_WEIGHT = 100;
 
-    private WorkoutHistory mWorkoutHistory;
+    private WorkoutViewModel mWorkoutViewModel;
 
     private EditText mName;
     private EditText mGender;
@@ -40,14 +47,6 @@ public class ProfileActivity extends AppCompatActivity {
     private ProfileStats mAllTimeStats;
     private ProfileStats mAverageWeeklyStats;
 
-    private HandlerThread mHandlerThread;
-    private Handler mBroadcastHandler;
-    private Handler mMainHandler;
-    private BroadcastReceiver mReceiver;
-
-    private boolean mIsWorkoutStarted;
-    private int mAddSteps;
-    private int mAddTime;
 
     private TextView mAllDistance;
     private TextView mAllTime;
@@ -59,24 +58,20 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView mAvgWorkouts;
     private TextView mAvgCalories;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         styleActionbar();
 
+        mWorkoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
+
         Intent data = getIntent();
         if (data != null) {
-            mIsWorkoutStarted  = data.getBooleanExtra(EXTRA_IS_RECORDING, false);
-            mAddSteps = data.getIntExtra(EXTRA_ADD_STEPS, 0);
-            mAddTime = data.getIntExtra(EXTRA_ADD_TIME, 0);
-            initializeHandlers();
-        } else {
-            mIsWorkoutStarted = false;
-            mAddSteps = 0;
-            mAddTime = 0;
+            int workoutId = data.getIntExtra(EXTRA_WORKOUT_ID, -1);
         }
+
+        mWorkoutViewModel.getAllWorkouts().observe(this, getWorkoutObserver());
 
         mAllTimeStats = new ProfileStats("All Time");
         mAverageWeeklyStats = new ProfileStats("Average/Weekly");
@@ -99,13 +94,6 @@ public class ProfileActivity extends AppCompatActivity {
         mAvgWorkouts = findViewById(R.id.workouts_text_view_id_2);
         mAvgCalories = findViewById(R.id.calories_text_view_id_2);
 
-        initializeHandlers();
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                handleWorkoutBroadcast(intent);
-            }
-        };
         mName.requestFocus();
     }
 
@@ -113,18 +101,12 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         saveProfileInformation();
-        this.unregisterReceiver(mReceiver);
-        if (isFinishing()) {
-            mHandlerThread.quit();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadProfileInformation();
-        IntentFilter intentFilter = new IntentFilter("com.seanschlaefli.alphafitness.CUSTOM_INTENT");
-        this.registerReceiver(mReceiver, intentFilter, null, mBroadcastHandler);
     }
 
     @Override
@@ -177,7 +159,14 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    private Observer<List<Workout>> getWorkoutObserver() {
+        return new Observer<List<Workout>>() {
+            @Override
+            public void onChanged(List<Workout> workouts) {
 
+            }
+        };
+    }
     private void updateStats(ProfileStats stats, TextView distance, TextView time,
                              TextView workouts, TextView calories) {
         updateDistance(distance, stats.getDistance(), "mi");
@@ -187,6 +176,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updateAllTimeStats() {
+        /*
         if (mWorkoutHistory != null) {
             int totalSteps = mWorkoutHistory.getTotalSteps() + mAddSteps;
             updateStatsModel(mAllTimeStats,
@@ -199,9 +189,11 @@ public class ProfileActivity extends AppCompatActivity {
             updateStats(mAllTimeStats, mAllDistance, mAllTime,
                     mAllWorkouts, mAllCalories);
         }
+        */
     }
 
     private void updateAverageWeeklyStats() {
+        /*
         if (mWorkoutHistory != null) {
             long totalTime = mWorkoutHistory.getTotalTime() + mAddTime;
             int totalSteps = mWorkoutHistory.getTotalSteps() + mAddSteps;
@@ -228,6 +220,7 @@ public class ProfileActivity extends AppCompatActivity {
                         mAvgWorkouts, mAvgCalories);
             }
         }
+        */
     }
 
     private void updateDistance(TextView distanceTextView, float distance, String units) {
@@ -237,7 +230,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateTime(TextView timeTextView, int timeInSeconds) {
         timeTextView.setText(
-                NanoFitnessUtil.createProfileTimeString(timeInSeconds));
+                TimeFormatter.createProfileTimeString(timeInSeconds));
     }
 
     private void updateWorkouts(TextView workoutsTextView, int numWorkouts) {
@@ -270,44 +263,10 @@ public class ProfileActivity extends AppCompatActivity {
         return gender.equals("male");
     }
 
-    private void handleWorkoutBroadcast(Intent intent) {
-        if (intent.hasExtra(WorkoutService.EXTRA_STEP_COUNT)) {
-            mAddSteps = intent.getIntExtra(WorkoutService.EXTRA_STEP_COUNT, 0);
-        }
-
-        if (intent.hasExtra(WorkoutService.EXTRA_TOTAL_TIME)) {
-            mAddTime = intent.getIntExtra(WorkoutService.EXTRA_TOTAL_TIME, 0);
-        }
-
-        mMainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                updateAllTimeStats();
-            }
-        });
-
-        mMainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                updateAverageWeeklyStats();
-            }
-        });
-    }
-
-    public static Intent newIntent(Context context, boolean isRecording,
-                                   int stepCount, int totalTime) {
+    public static Intent newIntent(Context context, int workoutId) {
         Intent data = new Intent(context, ProfileActivity.class);
-        data.putExtra(EXTRA_IS_RECORDING, isRecording);
-        data.putExtra(EXTRA_ADD_STEPS, stepCount);
-        data.putExtra(EXTRA_ADD_TIME, totalTime);
+        data.putExtra(EXTRA_WORKOUT_ID, workoutId);
         return data;
-    }
-
-    private void initializeHandlers() {
-        mHandlerThread = new HandlerThread("Broadcast Handler Thread");
-        mHandlerThread.start();
-        mBroadcastHandler = new Handler(mHandlerThread.getLooper());
-        mMainHandler = new Handler();
     }
 
     private void styleActionbar() {
@@ -316,6 +275,28 @@ public class ProfileActivity extends AppCompatActivity {
             ab.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             ab.setCustomView(R.layout.action_bar_profile);
             ab.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @Override
+    public void onWorkoutLoadComplete(Integer id) {
+
+    }
+
+    private static class LoadWorkoutTask extends AsyncTask<Integer, Void, Void> {
+
+        private WorkoutViewModel mVM;
+        private int mWorkoutId;
+
+        public LoadWorkoutTask(WorkoutViewModel vm, int workoutId) {
+            mVM = vm;
+            mWorkoutId = workoutId;
+        }
+
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            mVM.setCurrentWorkout(mWorkoutId);
+            return null;
         }
     }
 

@@ -1,4 +1,4 @@
-package com.seanschlaefli.nanofitness;
+package com.seanschlaefli.nanofitness.util;
 
 public class UnitConverter {
 

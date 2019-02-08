@@ -10,126 +10,141 @@ import androidx.room.PrimaryKey;
 public class Workout {
 
     public Workout(long startTime) {
-        this.startTime = startTime;
-        endTime = 0;
-        stepCount = 0;
-        numSeconds = 0;
-        maxRate = 0.0f;
-        minRate = 0.0f;
-        avgRate = 0.0f;
+        this.mStartTime = startTime;
+        mEndTime = 0;
+        mStepCount = 0;
+        mDistance = 0.0f;
+        mNumSeconds = 0;
+        mMaxRate = 0.0f;
+        mMinRate = 0.0f;
+        mAvgRate = 0.0f;
     }
 
     @Ignore
     public Workout(long startTime, long endTime,  int stepCount,
                    int numSeconds, float maxRate, float minRate,
                    float avgRate) {
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.stepCount = stepCount;
-        this.numSeconds = numSeconds;
-        this.maxRate = maxRate;
-        this.minRate = minRate;
-        this.avgRate = avgRate;
+        this.mStartTime = startTime;
+        this.mEndTime = endTime;
+        this.mStepCount = stepCount;
+        this.mNumSeconds = numSeconds;
+        this.mMaxRate = maxRate;
+        this.mMinRate = minRate;
+        this.mAvgRate = avgRate;
     }
 
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    @ColumnInfo(name = "id")
+    public int mId;
 
     @ColumnInfo(name = "start_time")
-    public long startTime;
+    public long mStartTime;
 
     @ColumnInfo(name = "end_time")
-    public long endTime;
+    public long mEndTime;
 
     @ColumnInfo(name = "step_count")
-    public int stepCount;
+    public int mStepCount;
+
+    @ColumnInfo(name = "distance")
+    public float mDistance;
 
     @ColumnInfo(name = "num_seconds")
-    public int numSeconds;
+    public int mNumSeconds;
 
     @ColumnInfo(name = "max_rate")
-    public Float maxRate;
+    public Float mMaxRate;
 
     @ColumnInfo(name = "min_rate")
-    public Float minRate;
+    public Float mMinRate;
 
     @ColumnInfo(name = "avg_rate")
-    public Float avgRate;
+    public Float mAvgRate;
 
     @Ignore
     public int getId() {
-        return id;
+        return mId;
     }
 
     @Ignore
     public long getStartTime() {
-        return startTime;
+        return mStartTime;
     }
 
     @Ignore
     public long getEndTime() {
-        return endTime;
+        return mEndTime;
     }
 
     @Ignore
     public void setEndTime(long endTime) {
-        this.endTime = endTime;
+        this.mEndTime = endTime;
     }
 
     @Ignore
     public int getStepCount() {
-        return stepCount;
+        return mStepCount;
     }
 
     @Ignore
     public void setStepCount(int stepCount) {
-        this.stepCount = stepCount;
+        this.mStepCount = stepCount;
+    }
+
+    @Ignore
+    public float getDistance() {
+        return mDistance;
+    }
+
+    @Ignore
+    public void setDistance(float distance) {
+        mDistance = distance;
     }
 
     @Ignore
     public int getNumSeconds() {
-        return numSeconds;
+        return mNumSeconds;
     }
 
     @Ignore
     public void incNumSeconds() {
-        numSeconds++;
+        mNumSeconds++;
     }
 
     @Ignore
     public Float getMaxRate() {
-        return maxRate;
+        return mMaxRate;
     }
 
     @Ignore
     public void setMaxRate(Float maxRate) {
-        this.maxRate = maxRate;
+        this.mMaxRate = maxRate;
     }
 
     @Ignore
     public Float getMinRate() {
-        return minRate;
+        return mMinRate;
     }
 
     @Ignore
     public void setMinRate(Float minRate) {
-        this.minRate = minRate;
+        this.mMinRate = minRate;
     }
 
     @Ignore
     public Float getAvgRate() {
-        return avgRate;
+        return mAvgRate;
     }
 
     @Ignore
     public void setAvgRate(Float avgRate) {
-        this.avgRate = avgRate;
+        this.mAvgRate = avgRate;
     }
 
     @Ignore
     public void updateRates(float newAvgRate, int numRecords) {
         if (!Float.isNaN(newAvgRate)) {
-            avgRate = newAvgRate;
+            mAvgRate = newAvgRate;
             updateMinRate(newAvgRate, numRecords);
             updateMaxRate(newAvgRate);
         }
@@ -137,25 +152,25 @@ public class Workout {
 
     @Ignore
     private void updateMinRate(float newAvgRate, int numRecords) {
-        if (minRate == null) {
+        if (mMinRate == null) {
             if (numRecords > 5) {
-                minRate = newAvgRate;
+                mMinRate = newAvgRate;
             }
             return;
         }
-        if (newAvgRate < minRate) {
-            minRate = newAvgRate;
+        if (newAvgRate < mMinRate) {
+            mMinRate = newAvgRate;
         }
     }
 
     @Ignore
     private void updateMaxRate(float newAvgRate) {
-        if (maxRate == null) {
-            maxRate = newAvgRate;
+        if (mMaxRate == null) {
+            mMaxRate = newAvgRate;
             return;
         }
-        if (newAvgRate > maxRate) {
-            maxRate = newAvgRate;
+        if (newAvgRate > mMaxRate) {
+            mMaxRate = newAvgRate;
         }
     }
 

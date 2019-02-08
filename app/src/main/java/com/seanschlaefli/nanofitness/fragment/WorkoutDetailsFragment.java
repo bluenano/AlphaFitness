@@ -1,4 +1,4 @@
-package com.seanschlaefli.nanofitness;
+package com.seanschlaefli.nanofitness.fragment;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
@@ -12,6 +12,9 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.seanschlaefli.nanofitness.util.TimeFormatter;
+import com.seanschlaefli.nanofitness.R;
+import com.seanschlaefli.nanofitness.util.UnitConverter;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -27,13 +30,6 @@ import java.util.List;
 public class WorkoutDetailsFragment extends Fragment {
 
     public static final String TAG = WorkoutDetailsFragment.class.getSimpleName();
-    public static final String START_TIME_KEY = "start_time_key";
-    public static final String AVG_RATE_KEY = "avg_rate_key";
-    public static final String MAX_RATE_KEY = "max_rate_key";
-    public static final String MIN_RATE_KEY = "min_rate_key";
-    public static final String STEPS_PER_MIN_KEY = "steps_per_min_key";
-    public static final String CALORIES_BURNED_KEY = "calories_burned_key";
-    public static final String RATES_RECORD_TIMES_KEY = "rates_record_times_key";
 
     private static final int SCALAR = 5;
     private static final String BAR_CHART_DESC = "Calories Burned";
@@ -50,8 +46,6 @@ public class WorkoutDetailsFragment extends Fragment {
 
     private BarDataSet mBarData;
     private LineDataSet mLineData;
-
-    private long mStartTime;
 
     private List<Integer> mXAxisMinutes;
 
@@ -71,55 +65,30 @@ public class WorkoutDetailsFragment extends Fragment {
         setupXAxis(mBarChart);
         setupXAxis(mLineChart);
 
-        List<Float> stepsPerMin = new ArrayList<>();
-        List<Integer> caloriesBurned = new ArrayList<>();
-        List<Long> ratesRecordTimes = new ArrayList<>();
-        Bundle args = getArguments();
-        if (args != null) {
-            mStartTime = args.getLong(START_TIME_KEY);
-            float[] stepsPerMinArr = args.getFloatArray(STEPS_PER_MIN_KEY);
-            int[] caloriesArr = args.getIntArray(CALORIES_BURNED_KEY);
-            long[] ratesRecordTimesArr = args.getLongArray(RATES_RECORD_TIMES_KEY);
-            if (stepsPerMinArr != null &&
-                    caloriesArr != null &&
-                    ratesRecordTimesArr != null) {
-                stepsPerMin = NanoFitnessUtil.convertFloatArray(stepsPerMinArr);
-                caloriesBurned = NanoFitnessUtil.convertIntArray(caloriesArr);
-                ratesRecordTimes = NanoFitnessUtil.convertLongArray(ratesRecordTimesArr);
-            }
-            updateAvgRate(args.getFloat(AVG_RATE_KEY));
-            updateMaxRate(args.getFloat(MAX_RATE_KEY));
-            updateMinRate(args.getFloat(MIN_RATE_KEY));
-        }
-
-        initializeBarData(caloriesBurned, ratesRecordTimes, mStartTime);
-        initializeLineData(stepsPerMin, ratesRecordTimes, mStartTime, SCALAR);
-        Log.d(TAG, mBarData.toString());
-        Log.d(TAG, mLineData.toString());
-
         return v;
     }
 
     public void updateAvgRate(float newRate) {
         mAvgRate.setText(
-                NanoFitnessUtil.createTimeStringFromRate(newRate));
+                TimeFormatter.createTimeStringFromRate(newRate));
     }
 
     public void updateMinRate(float newRate) {
         mMinRate.setText(
-                NanoFitnessUtil.createTimeStringFromRate(newRate));
+                TimeFormatter.createTimeStringFromRate(newRate));
     }
 
     public void updateMaxRate(float newRate) {
         mMaxRate.setText(
-                NanoFitnessUtil.createTimeStringFromRate(newRate));
+                TimeFormatter.createTimeStringFromRate(newRate));
     }
 
-    public void updateGraphs(List<Float> stepsPerMin,
+    public void updateGraphs(long startTime,
+                             List<Float> stepsPerMin,
                              List<Integer> caloriesBurned,
                              List<Long> recordTimes) {
-        initializeBarData(caloriesBurned, recordTimes, mStartTime);
-        initializeLineData(stepsPerMin, recordTimes, mStartTime, SCALAR);
+        initializeBarData(caloriesBurned, recordTimes, startTime);
+        initializeLineData(stepsPerMin, recordTimes, startTime, SCALAR);
     }
 
     public static WorkoutDetailsFragment newInstance() {

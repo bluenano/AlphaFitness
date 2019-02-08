@@ -4,6 +4,7 @@ import com.seanschlaefli.nanofitness.model.LocationRecord;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -23,11 +24,11 @@ public interface LocationRecordDao {
     void delete(LocationRecord locationRecord);
 
     @Query("SELECT * FROM locationrecord")
-    List<LocationRecord> getAll();
+    LiveData<List<LocationRecord>> getAll();
 
     @Query("SELECT * FROM locationrecord WHERE workout_id=:workoutId")
-    List<LocationRecord> loadByWorkoutId(final int workoutId);
+    LiveData<List<LocationRecord>> loadByWorkoutId(final int workoutId);
 
-    @Query("SELECT * FROM locationrecord WHERE id=:locationRecordId")
-    LocationRecord loadById(int locationRecordId);
+    @Query("SELECT * FROM locationrecord WHERE mId=:locationRecordId")
+    LiveData<LocationRecord> loadById(int locationRecordId);
 }

@@ -20,18 +20,18 @@
         android:theme="@style/AppTheme"
         android:versionCode="1"
         android:versionName="1.0">
-        <activity android:name=".RecordActivity">
+        <activity android:name=".activity.RecordActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProfileActivity"
+        <activity android:name=".activity.ProfileActivity"
             android:screenOrientation="portrait"/>
 
         <service
-            android:name=".WorkoutService"
+            android:name=".service.WorkoutService"
             android:enabled="true"
             android:exported="true"
             android:process=":workoutProc" />
@@ -47,11 +47,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <provider
-            android:name=".FitnessContentProvider"
-            android:authorities="com.seanschlaefli.nanofitness"
-            android:enabled="true"
-            android:exported="true"/>
     </application>
 
 </manifest>

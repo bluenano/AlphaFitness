@@ -57,30 +57,30 @@ public class WorkoutDaoTest {
         int id = (int) workoutDao.insert(workout);
         List<Workout> workouts = workoutDao.getAll();
         assertEquals(workouts.size(), 1);
-        assertEquals(workouts.get(0).id, id);
-        assertEquals(workouts.get(0).startTime, expectedStartTime);
-        assertEquals(workouts.get(0).endTime, expectedEndTime);
-        assertEquals(workouts.get(0).stepCount, expectedSteps);
-        assertEquals(workouts.get(0).numSeconds, expectedSeconds);
-        assertEquals(workouts.get(0).maxRate, expectedMaxRate, 0.1f);
-        assertEquals(workouts.get(0).minRate, expectedMinRate, 0.1f);
-        assertEquals(workouts.get(0).avgRate, expectedAvgRate, 0.1f);
+        assertEquals(workouts.get(0).mId, id);
+        assertEquals(workouts.get(0).mStartTime, expectedStartTime);
+        assertEquals(workouts.get(0).mEndTime, expectedEndTime);
+        assertEquals(workouts.get(0).mStepCount, expectedSteps);
+        assertEquals(workouts.get(0).mNumSeconds, expectedSeconds);
+        assertEquals(workouts.get(0).mMaxRate, expectedMaxRate, 0.1f);
+        assertEquals(workouts.get(0).mMinRate, expectedMinRate, 0.1f);
+        assertEquals(workouts.get(0).mAvgRate, expectedAvgRate, 0.1f);
         Workout result = workoutDao.loadById(id);
-        assertEquals(result.id, id);
-        assertEquals(result.startTime, expectedStartTime);
-        assertEquals(result.endTime, expectedEndTime);
-        assertEquals(result.stepCount, expectedSteps);
-        assertEquals(result.numSeconds, expectedSeconds);
-        assertEquals(result.maxRate, expectedMaxRate, 0.1f);
-        assertEquals(result.minRate, expectedMinRate, 0.1f);
-        assertEquals(result.avgRate, expectedAvgRate, 0.1f);
+        assertEquals(result.mId, id);
+        assertEquals(result.mStartTime, expectedStartTime);
+        assertEquals(result.mEndTime, expectedEndTime);
+        assertEquals(result.mStepCount, expectedSteps);
+        assertEquals(result.mNumSeconds, expectedSeconds);
+        assertEquals(result.mMaxRate, expectedMaxRate, 0.1f);
+        assertEquals(result.mMinRate, expectedMinRate, 0.1f);
+        assertEquals(result.mAvgRate, expectedAvgRate, 0.1f);
     }
 
     @Test
     public void deleteSingleWorkout() {
         Workout workout = TestUtil.createWorkout(expectedStartTime);
         int id = (int) workoutDao.insert(workout);
-        workout.id = id;
+        workout.mId = id;
         workoutDao.delete(workout);
         List<Workout> workouts = workoutDao.getAll();
         assertEquals(workouts.size(), 0);
@@ -90,10 +90,10 @@ public class WorkoutDaoTest {
     public void updateSingleWorkout() {
         Workout workout = TestUtil.createWorkout(expectedStartTime);
         int id = (int) workoutDao.insert(workout);
-        workout.id = id;
-        workout.startTime = expectedStartTime + expectedEndTime;
+        workout.mId = id;
+        workout.mStartTime = expectedStartTime + expectedEndTime;
         workoutDao.update(workout);
-        Workout result = workoutDao.loadById(workout.id);
-        assertEquals(result.startTime, expectedStartTime + expectedEndTime);
+        Workout result = workoutDao.loadById(workout.mId);
+        assertEquals(result.mStartTime, expectedStartTime + expectedEndTime);
     }
 }
