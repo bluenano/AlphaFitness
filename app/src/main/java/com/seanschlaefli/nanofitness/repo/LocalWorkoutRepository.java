@@ -3,9 +3,9 @@ package com.seanschlaefli.nanofitness.repo;
 import android.app.Application;
 import android.os.AsyncTask;
 
-import com.seanschlaefli.nanofitness.dao.WorkoutDao;
+import com.seanschlaefli.nanofitness.database.dao.WorkoutDao;
 import com.seanschlaefli.nanofitness.database.AppDatabase;
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 
 import java.util.List;
 

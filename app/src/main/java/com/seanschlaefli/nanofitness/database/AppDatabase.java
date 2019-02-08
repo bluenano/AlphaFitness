@@ -2,12 +2,12 @@ package com.seanschlaefli.nanofitness.database;
 
 import android.content.Context;
 
-import com.seanschlaefli.nanofitness.dao.LocationRecordDao;
-import com.seanschlaefli.nanofitness.dao.StepRecordDao;
-import com.seanschlaefli.nanofitness.dao.WorkoutDao;
-import com.seanschlaefli.nanofitness.model.LocationRecord;
-import com.seanschlaefli.nanofitness.model.StepRecord;
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.dao.LocationRecordDao;
+import com.seanschlaefli.nanofitness.database.dao.StepRecordDao;
+import com.seanschlaefli.nanofitness.database.dao.WorkoutDao;
+import com.seanschlaefli.nanofitness.database.entity.LocationRecord;
+import com.seanschlaefli.nanofitness.database.entity.StepRecord;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 
 import androidx.room.Database;
 import androidx.room.Room;

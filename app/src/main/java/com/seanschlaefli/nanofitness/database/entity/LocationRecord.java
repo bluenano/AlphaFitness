@@ -1,9 +1,6 @@
-package com.seanschlaefli.nanofitness.model;
+package com.seanschlaefli.nanofitness.database.entity;
 
 import android.location.Location;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

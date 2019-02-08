@@ -15,9 +15,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.seanschlaefli.nanofitness.util.TimeFormatter;
-import com.seanschlaefli.nanofitness.ProfileStats;
+import com.seanschlaefli.nanofitness.activity.model.ProfileStats;
 import com.seanschlaefli.nanofitness.R;
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 import com.seanschlaefli.nanofitness.viewmodel.WorkoutViewModel;
 
 import java.text.NumberFormat;

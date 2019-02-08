@@ -1,6 +1,6 @@
-package com.seanschlaefli.nanofitness.dao;
+package com.seanschlaefli.nanofitness.database.dao;
 
-import com.seanschlaefli.nanofitness.model.LocationRecord;
+import com.seanschlaefli.nanofitness.database.entity.LocationRecord;
 
 import java.util.List;
 

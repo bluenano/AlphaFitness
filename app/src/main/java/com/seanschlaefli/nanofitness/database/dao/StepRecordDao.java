@@ -1,6 +1,6 @@
-package com.seanschlaefli.nanofitness.dao;
+package com.seanschlaefli.nanofitness.database.dao;
 
-import com.seanschlaefli.nanofitness.model.StepRecord;
+import com.seanschlaefli.nanofitness.database.entity.StepRecord;
 
 import java.util.List;
 

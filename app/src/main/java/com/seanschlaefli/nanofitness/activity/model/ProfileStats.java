@@ -1,4 +1,4 @@
-package com.seanschlaefli.nanofitness;
+package com.seanschlaefli.nanofitness.activity.model;
 
 public class ProfileStats {
 

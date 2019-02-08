@@ -2,9 +2,9 @@ package com.seanschlaefli.nanofitness.repo;
 
 import android.app.Application;
 
-import com.seanschlaefli.nanofitness.dao.LocationRecordDao;
+import com.seanschlaefli.nanofitness.database.dao.LocationRecordDao;
 import com.seanschlaefli.nanofitness.database.AppDatabase;
-import com.seanschlaefli.nanofitness.model.LocationRecord;
+import com.seanschlaefli.nanofitness.database.entity.LocationRecord;
 
 import java.util.List;
 

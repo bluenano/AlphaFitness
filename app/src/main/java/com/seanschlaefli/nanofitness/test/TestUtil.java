@@ -1,10 +1,8 @@
 package com.seanschlaefli.nanofitness.test;
 
-import android.location.Location;
-
-import com.seanschlaefli.nanofitness.model.LocationRecord;
-import com.seanschlaefli.nanofitness.model.StepRecord;
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.entity.LocationRecord;
+import com.seanschlaefli.nanofitness.database.entity.StepRecord;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 
 public class TestUtil {
     private TestUtil() {}

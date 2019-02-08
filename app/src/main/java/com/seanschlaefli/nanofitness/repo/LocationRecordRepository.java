@@ -1,6 +1,6 @@
 package com.seanschlaefli.nanofitness.repo;
 
-import com.seanschlaefli.nanofitness.model.LocationRecord;
+import com.seanschlaefli.nanofitness.database.entity.LocationRecord;
 
 import java.util.List;
 

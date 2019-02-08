@@ -3,7 +3,7 @@ package com.seanschlaefli.nanofitness.viewmodel;
 import android.app.Application;
 import android.location.Location;
 
-import com.seanschlaefli.nanofitness.model.LocationRecord;
+import com.seanschlaefli.nanofitness.database.entity.LocationRecord;
 import com.seanschlaefli.nanofitness.repo.LocalLocationRecordRepository;
 import com.seanschlaefli.nanofitness.repo.LocationRecordRepository;
 

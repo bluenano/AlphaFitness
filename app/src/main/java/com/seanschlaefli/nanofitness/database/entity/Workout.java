@@ -1,4 +1,4 @@
-package com.seanschlaefli.nanofitness.model;
+package com.seanschlaefli.nanofitness.database.entity;
 
 
 import androidx.room.ColumnInfo;

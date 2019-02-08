@@ -3,7 +3,7 @@ package com.seanschlaefli.nanofitness.viewmodel;
 import android.app.Application;
 import android.util.Log;
 
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 import com.seanschlaefli.nanofitness.repo.LocalWorkoutRepository;
 import com.seanschlaefli.nanofitness.repo.WorkoutRepository;
 

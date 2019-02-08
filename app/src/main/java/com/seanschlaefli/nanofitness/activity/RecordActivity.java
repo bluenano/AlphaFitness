@@ -23,9 +23,9 @@ import com.seanschlaefli.nanofitness.fragment.RecordWorkoutFragment;
 import com.seanschlaefli.nanofitness.fragment.WorkoutDetailsFragment;
 import com.seanschlaefli.nanofitness.util.WorkoutMath;
 import com.seanschlaefli.nanofitness.service.WorkoutService;
-import com.seanschlaefli.nanofitness.model.LocationRecord;
-import com.seanschlaefli.nanofitness.model.StepRecord;
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.entity.LocationRecord;
+import com.seanschlaefli.nanofitness.database.entity.StepRecord;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 
 import com.seanschlaefli.nanofitness.viewmodel.LocationRecordViewModel;
 import com.seanschlaefli.nanofitness.viewmodel.MyViewModelFactory;

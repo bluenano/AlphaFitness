@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.seanschlaefli.nanofitness.util.UnitConverter;
 import com.seanschlaefli.nanofitness.util.WorkoutMath;
-import com.seanschlaefli.nanofitness.model.StepRecord;
+import com.seanschlaefli.nanofitness.database.entity.StepRecord;
 import com.seanschlaefli.nanofitness.repo.LocalStepRecordRepository;
 import com.seanschlaefli.nanofitness.repo.StepRecordRepository;
 

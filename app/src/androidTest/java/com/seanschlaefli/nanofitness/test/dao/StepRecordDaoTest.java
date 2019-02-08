@@ -2,9 +2,9 @@ package com.seanschlaefli.nanofitness.test.dao;
 
 import android.content.Context;
 
-import com.seanschlaefli.nanofitness.dao.StepRecordDao;
+import com.seanschlaefli.nanofitness.database.dao.StepRecordDao;
 import com.seanschlaefli.nanofitness.database.AppDatabase;
-import com.seanschlaefli.nanofitness.model.StepRecord;
+import com.seanschlaefli.nanofitness.database.entity.StepRecord;
 import com.seanschlaefli.nanofitness.test.TestUtil;
 
 import org.junit.After;

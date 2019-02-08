@@ -2,10 +2,10 @@ package com.seanschlaefli.nanofitness.test.dao;
 
 import android.content.Context;
 
-import com.seanschlaefli.nanofitness.dao.LocationRecordDao;
+import com.seanschlaefli.nanofitness.database.dao.LocationRecordDao;
 import com.seanschlaefli.nanofitness.database.AppDatabase;
-import com.seanschlaefli.nanofitness.model.LocationRecord;
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.entity.LocationRecord;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 import com.seanschlaefli.nanofitness.test.TestUtil;
 
 import org.junit.After;

@@ -1,6 +1,6 @@
 package com.seanschlaefli.nanofitness.repo;
 
-import com.seanschlaefli.nanofitness.model.StepRecord;
+import com.seanschlaefli.nanofitness.database.entity.StepRecord;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.seanschlaefli.nanofitness.activity.OnWorkoutLoadComplete;
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 import com.seanschlaefli.nanofitness.viewmodel.WorkoutViewModel;
 
 public class InsertWorkoutTask extends AsyncTask<Workout, Integer, Integer> {

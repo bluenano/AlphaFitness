@@ -2,9 +2,9 @@ package com.seanschlaefli.nanofitness.test.dao;
 
 import android.content.Context;
 
-import com.seanschlaefli.nanofitness.dao.WorkoutDao;
+import com.seanschlaefli.nanofitness.database.dao.WorkoutDao;
 import com.seanschlaefli.nanofitness.database.AppDatabase;
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 import com.seanschlaefli.nanofitness.test.TestUtil;
 
 import org.junit.After;

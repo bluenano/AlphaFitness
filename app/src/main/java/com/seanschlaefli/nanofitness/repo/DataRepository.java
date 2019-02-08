@@ -1,6 +1,4 @@
-package com.seanschlaefli.nanofitness;
-
-import android.app.Application;
+package com.seanschlaefli.nanofitness.repo;
 
 import com.seanschlaefli.nanofitness.database.AppDatabase;
 

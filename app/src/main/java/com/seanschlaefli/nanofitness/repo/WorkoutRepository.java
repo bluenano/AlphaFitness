@@ -1,6 +1,6 @@
 package com.seanschlaefli.nanofitness.repo;
 
-import com.seanschlaefli.nanofitness.model.Workout;
+import com.seanschlaefli.nanofitness.database.entity.Workout;
 
 import java.util.List;
 
