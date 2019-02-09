@@ -109,8 +109,7 @@ public class RecordActivity extends AppCompatActivity
                 Workout workout = mWorkoutViewModel.getCurrentWorkout().getValue();
                 if (workout != null) {
                     workout.setEndTime(Calendar.getInstance().getTimeInMillis());
-                    // make this call async
-                    //mWorkoutViewModel.update(workout);
+                    mWorkoutViewModel.update(workout);
                 }
             }
             stopService(new Intent(RecordActivity.this, WorkoutService.class));
@@ -145,21 +144,13 @@ public class RecordActivity extends AppCompatActivity
         mIsWorkoutStarted = false;
         if (workout != null) {
             workout.setEndTime(endTime);
-            // make this call async
-            //mWorkoutViewModel.update(workout);
+            mWorkoutViewModel.update(workout);
         }
     }
 
     @Override
-    public void startProfileActivity(boolean isRecording) {
-        int workoutId = -1;
-        if (mIsWorkoutStarted) {
-            Workout workout = mWorkoutViewModel.getCurrentWorkout().getValue();
-            if (workout != null) {
-                workoutId = workout.getId();
-            }
-        }
-        Intent intent = ProfileActivity.newIntent(this, workoutId);
+    public void startProfileActivity() {
+        Intent intent = ProfileActivity.newIntent(this);
         startActivity(intent);
     }
 

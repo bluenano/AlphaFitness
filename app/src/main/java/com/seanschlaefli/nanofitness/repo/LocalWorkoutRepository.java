@@ -38,8 +38,8 @@ public class LocalWorkoutRepository implements WorkoutRepository {
     }
 
     @Override
-    public void update(Workout workout) {
-        mWorkoutDao.update(workout);
+        public void update(Workout workout) {
+            new UpdateAsyncTask(mWorkoutDao).execute(workout);
     }
 
     /*
@@ -78,4 +78,38 @@ public class LocalWorkoutRepository implements WorkoutRepository {
         }
     }
 
+    private static class UpdateAsyncTask extends AsyncTask<Workout, Void, Void> {
+
+        private WorkoutDao mWorkoutDao;
+
+        public UpdateAsyncTask(WorkoutDao workoutDao) {
+            mWorkoutDao = workoutDao;
+        }
+
+
+        @Override
+        protected Void doInBackground(Workout... workouts) {
+            for (Workout workout: workouts) {
+                mWorkoutDao.update(workout);
+            }
+            return null;
+        }
+    }
+
+    private static class DeleteAsyncTask extends AsyncTask<Workout, Void, Void> {
+
+        private WorkoutDao mWorkoutDao;
+
+        public DeleteAsyncTask(WorkoutDao workoutDao) {
+            mWorkoutDao = workoutDao;
+        }
+
+        @Override
+        protected Void doInBackground(Workout... workouts) {
+            for (Workout workout: workouts) {
+                mWorkoutDao.delete(workout);
+            }
+            return null;
+        }
+    }
 }

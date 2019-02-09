@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.seanschlaefli.nanofitness.activity.model.ProfileStatsFactory;
 import com.seanschlaefli.nanofitness.util.TimeFormatter;
 import com.seanschlaefli.nanofitness.activity.model.ProfileStats;
 import com.seanschlaefli.nanofitness.R;
@@ -21,16 +22,15 @@ import com.seanschlaefli.nanofitness.database.entity.Workout;
 import com.seanschlaefli.nanofitness.viewmodel.WorkoutViewModel;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 
 public class ProfileActivity extends AppCompatActivity
-    implements OnWorkoutLoadComplete {
+    implements OnProfileStatsLoadComplete {
 
     public static final String TAG = ProfileActivity.class.getSimpleName();
-
-    public static final String EXTRA_WORKOUT_ID = "workout_id_extra";
 
     public static final String NAME_KEY = "name_key";
     public static final String GENDER_KEY = "gender_key";
@@ -46,7 +46,6 @@ public class ProfileActivity extends AppCompatActivity
 
     private ProfileStats mAllTimeStats;
     private ProfileStats mAverageWeeklyStats;
-
 
     private TextView mAllDistance;
     private TextView mAllTime;
@@ -65,13 +64,6 @@ public class ProfileActivity extends AppCompatActivity
         styleActionbar();
 
         mWorkoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
-
-        Intent data = getIntent();
-        if (data != null) {
-            int workoutId = data.getIntExtra(EXTRA_WORKOUT_ID, -1);
-        }
-
-        mWorkoutViewModel.getAllWorkouts().observe(this, getWorkoutObserver());
 
         mAllTimeStats = new ProfileStats("All Time");
         mAverageWeeklyStats = new ProfileStats("Average/Weekly");
@@ -107,6 +99,8 @@ public class ProfileActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         loadProfileInformation();
+        mWorkoutViewModel.getAllWorkouts().observe(this,
+                getWorkoutsObserver(this, getWeight(mWeight.getText().toString())));
     }
 
     @Override
@@ -159,68 +153,21 @@ public class ProfileActivity extends AppCompatActivity
         }
     }
 
-    private Observer<List<Workout>> getWorkoutObserver() {
+    private Observer<List<Workout>> getWorkoutsObserver(final OnProfileStatsLoadComplete callback,
+                                                        final int weight) {
         return new Observer<List<Workout>>() {
             @Override
-            public void onChanged(List<Workout> workouts) {
-
+            public final void onChanged(List<Workout> workouts) {
+                new CalculateStatsTask(callback, weight).execute(workouts);
             }
         };
     }
-    private void updateStats(ProfileStats stats, TextView distance, TextView time,
-                             TextView workouts, TextView calories) {
+    private void updateStats(ProfileStats stats, TextView distance,
+                             TextView time, TextView workouts, TextView calories) {
         updateDistance(distance, stats.getDistance(), "mi");
         updateTime(time, stats.getTime());
         updateWorkouts(workouts, stats.getNumWorkouts());
         updateCalories(calories, stats.getNumCalories());
-    }
-
-    private void updateAllTimeStats() {
-        /*
-        if (mWorkoutHistory != null) {
-            int totalSteps = mWorkoutHistory.getTotalSteps() + mAddSteps;
-            updateStatsModel(mAllTimeStats,
-                    WorkoutMath.calculateDistanceInMiles(totalSteps,
-                            mWorkoutHistory.isMale()),
-                    mWorkoutHistory.getTotalTime(),
-                    mWorkoutHistory.getNumWorkouts(),
-                    WorkoutMath.calculateCaloriesBurned(totalSteps,
-                            getWeight(mWeight.getText().toString())));
-            updateStats(mAllTimeStats, mAllDistance, mAllTime,
-                    mAllWorkouts, mAllCalories);
-        }
-        */
-    }
-
-    private void updateAverageWeeklyStats() {
-        /*
-        if (mWorkoutHistory != null) {
-            long totalTime = mWorkoutHistory.getTotalTime() + mAddTime;
-            int totalSteps = mWorkoutHistory.getTotalSteps() + mAddSteps;
-            if (WorkoutMath.isLongerThanAWeek(totalTime)) {
-                float numWeeks = mWorkoutHistory.getNumWeeks();
-                float totalDistanceInMiles = WorkoutMath.calculateDistanceInMiles(totalSteps,
-                        mWorkoutHistory.isMale());
-                int caloriesBurned = WorkoutMath.calculateCaloriesBurned(
-                        totalSteps,
-                        getWeight(mWeight.getText().toString()));
-                float averageWeeklyDistance = totalDistanceInMiles / numWeeks;
-                int avgWeeklyTime =  (int) (totalTime / numWeeks);
-                int avgWeeklyWorkouts = (int) (mWorkoutHistory.getNumWorkouts() / numWeeks);
-                int avgWeeklyCal = (int) (caloriesBurned / numWeeks);
-                if (mAverageWeeklyStats == null) {
-                    mAverageWeeklyStats = new ProfileStats("Average/Weekly");
-                }
-                updateStatsModel(mAverageWeeklyStats, averageWeeklyDistance,
-                        avgWeeklyTime, avgWeeklyWorkouts, avgWeeklyCal);
-                updateStats(mAverageWeeklyStats, mAvgDistance, mAvgTime,
-                        mAvgWorkouts, mAvgCalories);
-            } else {
-                updateStats(mAllTimeStats, mAvgDistance, mAvgTime,
-                        mAvgWorkouts, mAvgCalories);
-            }
-        }
-        */
     }
 
     private void updateDistance(TextView distanceTextView, float distance, String units) {
@@ -243,14 +190,6 @@ public class ProfileActivity extends AppCompatActivity
         caloriesTextView.setText(formatted + " Cal");
     }
 
-    private void updateStatsModel(ProfileStats stats, float newDistance,
-                                  int newTime, int newWorkouts, int newCalories) {
-        stats.setDistance(newDistance);
-        stats.setTime(newTime);
-        stats.setNumWorkouts(newWorkouts);
-        stats.setNumCalories(newCalories);
-    }
-
     public static int getWeight(String weightStr) {
         if (validateWeight(weightStr)) {
             return Integer.parseInt(weightStr);
@@ -258,14 +197,8 @@ public class ProfileActivity extends AppCompatActivity
         return DEFAULT_WEIGHT;
     }
 
-    private boolean isMale(String gender) {
-        gender = gender.toLowerCase();
-        return gender.equals("male");
-    }
-
-    public static Intent newIntent(Context context, int workoutId) {
+    public static Intent newIntent(Context context) {
         Intent data = new Intent(context, ProfileActivity.class);
-        data.putExtra(EXTRA_WORKOUT_ID, workoutId);
         return data;
     }
 
@@ -279,25 +212,43 @@ public class ProfileActivity extends AppCompatActivity
     }
 
     @Override
-    public void onWorkoutLoadComplete(Integer id) {
-
+    public void onProfileStatsLoadComplete(ProfileStats allTime, ProfileStats avgWeekly) {
+        updateStats(allTime, mAllDistance, mAllTime, mAllWorkouts, mAllCalories);
+        updateStats(avgWeekly, mAvgDistance, mAvgTime, mAvgWorkouts, mAvgCalories);
     }
 
-    private static class LoadWorkoutTask extends AsyncTask<Integer, Void, Void> {
+    private static class CalculateStatsTask extends AsyncTask<List<Workout>, Void, List<ProfileStats>> {
 
-        private WorkoutViewModel mVM;
-        private int mWorkoutId;
+        private OnProfileStatsLoadComplete mCallback;
+        private int mWeight;
 
-        public LoadWorkoutTask(WorkoutViewModel vm, int workoutId) {
-            mVM = vm;
-            mWorkoutId = workoutId;
+        public CalculateStatsTask(OnProfileStatsLoadComplete callback, int weight) {
+            mCallback = callback;
+            mWeight = weight;
         }
 
         @Override
-        protected Void doInBackground(Integer... integers) {
-            mVM.setCurrentWorkout(mWorkoutId);
+        protected List<ProfileStats> doInBackground(List<Workout>... lists) {
+            if (lists.length == 1) {
+                ProfileStats allTime = ProfileStatsFactory.createAllTime(lists[0], mWeight);
+                ProfileStats avgWeekly = ProfileStatsFactory.createAverageWeekly(lists[0], mWeight);
+                List<ProfileStats> ret = new ArrayList<>();
+                ret.add(allTime);
+                ret.add(avgWeekly);
+                return ret;
+            }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(List<ProfileStats> profileStats) {
+            if (profileStats != null && profileStats.size() == 2) {
+                mCallback.onProfileStatsLoadComplete(profileStats.get(0),
+                        profileStats.get(1));
+            }
+            super.onPostExecute(profileStats);
+        }
     }
+
 
 }

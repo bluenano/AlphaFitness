@@ -218,15 +218,11 @@ public class WorkoutService extends Service implements OnStartRecordingWorkout {
         mLocationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                List<Location> locations = locationResult.getLocations();
-                if (locations.size() == 0) {
-                    return;
-                }
-                for (Location location: locations) {
-                    insertLocation(location);
+                if (locationResult != null) {
+                    List<Location> locations = locationResult.getLocations();
+                    for (Location location : locations) {
+                        insertLocation(location);
+                    }
                 }
             }
         };
@@ -268,7 +264,6 @@ public class WorkoutService extends Service implements OnStartRecordingWorkout {
                 Log.d(TAG, "Service updating workout with id " + Integer.toString(mWorkout.getId()));
                 mWorkout.incNumSeconds();
                 mWorkoutDao.update(mWorkout);
-                //broadcastWorkout(mWorkout);
             }
         }
 
@@ -287,8 +282,6 @@ public class WorkoutService extends Service implements OnStartRecordingWorkout {
         @Override
         protected Workout doInBackground(Integer... integers) {
             if (integers.length == 1) {
-                Log.d(TAG, "loading workout by id");
-                Log.d(TAG, "id is " + Integer.toString(integers[0]));
                 return mWorkoutDao.loadByIdSync(integers[0]);
             }
             return null;

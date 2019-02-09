@@ -41,10 +41,12 @@ public class WorkoutMathTest {
         assertEquals(expectedDistanceFemale, femaleResult, 0.1);
     }
 
+    /*
     @Test
     public void isLongerThanAWeek() {
         assertFalse(WorkoutMath.isLongerThanAWeek(msInOneWeek));
         assertFalse(WorkoutMath.isLongerThanAWeek(msInOneWeek-1));
         assertTrue(WorkoutMath.isLongerThanAWeek(msInOneWeek+1));
     }
+    */
 }

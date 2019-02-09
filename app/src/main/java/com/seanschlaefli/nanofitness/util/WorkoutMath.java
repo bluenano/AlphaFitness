@@ -11,8 +11,6 @@ public class WorkoutMath {
     private static final float sMaleMultiplier = 2.5f;
     private static final float sFemaleMultiplier = 2.2f;
 
-    public static final long msInOneWeek = 604800000;
-
     private static final Integer[] WEIGHTS = new Integer[] {
             100, 120, 140, 160, 180, 200, 220, 250, 275, 300
     };
@@ -69,10 +67,6 @@ public class WorkoutMath {
             }
         }
         return WEIGHTS[0];
-    }
-
-    public static boolean isLongerThanAWeek(long timeInMs) {
-        return timeInMs > msInOneWeek;
     }
 
 }

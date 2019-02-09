@@ -72,7 +72,7 @@ public class RecordWorkoutFragment extends Fragment {
     public interface OnRecordChange {
         void workoutStarted(long startTime);
         void workoutEnded(long endTime);
-        void startProfileActivity(boolean isRecording);
+        void startProfileActivity();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class RecordWorkoutFragment extends Fragment {
         profileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCallback.startProfileActivity(mIsRecording);
+                mCallback.startProfileActivity();
             }
         });
 
