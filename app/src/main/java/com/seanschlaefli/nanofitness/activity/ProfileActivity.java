@@ -44,9 +44,6 @@ public class ProfileActivity extends AppCompatActivity
     private EditText mGender;
     private EditText mWeight;
 
-    private ProfileStats mAllTimeStats;
-    private ProfileStats mAverageWeeklyStats;
-
     private TextView mAllDistance;
     private TextView mAllTime;
     private TextView mAllWorkouts;
@@ -64,9 +61,6 @@ public class ProfileActivity extends AppCompatActivity
         styleActionbar();
 
         mWorkoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
-
-        mAllTimeStats = new ProfileStats("All Time");
-        mAverageWeeklyStats = new ProfileStats("Average/Weekly");
 
         Resources r = getResources();
         TextView titleAll = findViewById(R.id.title_text_view_id_1);
@@ -227,8 +221,9 @@ public class ProfileActivity extends AppCompatActivity
             mWeight = weight;
         }
 
+        @SafeVarargs
         @Override
-        protected List<ProfileStats> doInBackground(List<Workout>... lists) {
+        protected final List<ProfileStats> doInBackground(List<Workout>... lists) {
             if (lists.length == 1) {
                 ProfileStats allTime = ProfileStatsFactory.createAllTime(lists[0], mWeight);
                 ProfileStats avgWeekly = ProfileStatsFactory.createAverageWeekly(lists[0], mWeight);

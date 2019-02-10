@@ -2,13 +2,13 @@ package com.seanschlaefli.nanofitness.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -76,7 +76,7 @@ public class RecordWorkoutFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.d(TAG, "In RecordWorkoutFragment onCreateView");
         View v = inflater.inflate(R.layout.fragment_workout, container, false);
 
@@ -112,7 +112,7 @@ public class RecordWorkoutFragment extends Fragment {
             }
         });
 
-        if (mMapFragment == null) {
+        if (mMapFragment == null || !mMapFragment.isAdded()) {
             mMapFragment = SupportMapFragment.newInstance();
         }
         loadMap();
@@ -120,34 +120,22 @@ public class RecordWorkoutFragment extends Fragment {
         return v;
     }
 
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        int current = getResources().getConfiguration().orientation;
-        if (current == Configuration.ORIENTATION_PORTRAIT) {
-            loadMap();
-        }
-    }
-
     public static RecordWorkoutFragment newInstance() {
         return new RecordWorkoutFragment();
     }
 
     private void loadMap() {
-        FragmentManager fm = getFragmentManager();
-        if (fm != null) {
-            fm.beginTransaction().add(R.id.map_id, mMapFragment).commit();
-            mMapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap googleMap) {
-                    mMap = googleMap;
-                    if (!mIsRecording) {
-                        displayDefaultMap();
-                    }
+        FragmentManager fm = getChildFragmentManager();
+        fm.beginTransaction().replace(R.id.map_container, mMapFragment).commit();
+        mMapFragment.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mMap = googleMap;
+                if (!mIsRecording) {
+                    displayDefaultMap();
                 }
-            });
-        }
+            }
+        });
     }
 
     private void handleRecordStateChange() {
@@ -159,11 +147,12 @@ public class RecordWorkoutFragment extends Fragment {
             resetMap();
             Activity activity = getActivity();
             if (activity != null) {
+                /*
                 mIsRecording = true;
                 mCallback.workoutStarted(Calendar.getInstance().getTimeInMillis());
                 mRecordButton.setText(getResources().getString(R.string.stop_workout));
                 initializeMap();
-                /*
+                */
                 boolean locationPermission = hasLocationPermission();
                 boolean sensorRequired = hasRequiredSensor();
                 if (locationPermission && sensorRequired) {
@@ -174,7 +163,6 @@ public class RecordWorkoutFragment extends Fragment {
                 } else {
                     displayToast(locationPermission, sensorRequired);
                 }
-                */
             }
 
         }

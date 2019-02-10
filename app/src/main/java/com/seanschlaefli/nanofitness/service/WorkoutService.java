@@ -68,7 +68,6 @@ public class WorkoutService extends Service implements OnStartRecordingWorkout {
             workoutId = intent.getIntExtra(EXTRA_WORKOUT_ID, workoutId);
             mIsMale = intent.getBooleanExtra(EXTRA_IS_MALE, mIsMale);
         }
-        Log.d(TAG, "mWorkoutId is " + Integer.toString(workoutId));
         if (workoutId != -1) {
             new LoadWorkoutTask(this, mWorkoutDao).execute(workoutId);
         }
@@ -146,14 +145,16 @@ public class WorkoutService extends Service implements OnStartRecordingWorkout {
                     mLocationCallback,
                     null
             );
-        } catch (SecurityException e) {} // find out best practice to handle this
+        } catch (SecurityException e) {
+            handleFailure();
+        }
     }
 
     private void insertStepRecord(int steps, long time) {
         StepRecord newSteps = new StepRecord(mWorkout.getId(),
                 steps,
                 time);
-        mStepRecordDao.insert(newSteps);
+        new InsertStepRecordTask(mStepRecordDao).execute(newSteps);
     }
 
     private void insertLocation(Location location) {
@@ -163,7 +164,7 @@ public class WorkoutService extends Service implements OnStartRecordingWorkout {
                     location.getLongitude(),
                     Calendar.getInstance().getTimeInMillis(),
                     location.getProvider());
-            mLocationRecordDao.insert(newLocation);
+            new InsertLocationRecordTask(mLocationRecordDao).execute(newLocation);
         }
     }
 
@@ -204,7 +205,7 @@ public class WorkoutService extends Service implements OnStartRecordingWorkout {
                                     records.size()
                             );
                         }
-                        mWorkoutDao.update(mWorkout);
+                        new UpdateWorkoutTask(mWorkoutDao).execute(mWorkout);
                     }
                 }
             }
@@ -229,7 +230,7 @@ public class WorkoutService extends Service implements OnStartRecordingWorkout {
     }
 
     private void handleFailure() {
-
+        // broadcast the error to the main application to handle it
     }
 
     @Override
@@ -293,6 +294,57 @@ public class WorkoutService extends Service implements OnStartRecordingWorkout {
                 mCallback.onStartRecordingWorkout(workout);
             }
             super.onPostExecute(workout);
+        }
+    }
+
+    private static class UpdateWorkoutTask extends AsyncTask<Workout, Void, Void> {
+
+        private WorkoutDao mWorkoutDao;
+
+        public UpdateWorkoutTask(WorkoutDao workoutDao) {
+            mWorkoutDao = workoutDao;
+        }
+
+        @Override
+        protected Void doInBackground(Workout... workouts) {
+            for (Workout workout: workouts) {
+                mWorkoutDao.update(workout);
+            }
+            return null;
+        }
+    }
+
+    private static class InsertStepRecordTask extends AsyncTask<StepRecord, Void, Void> {
+
+        private StepRecordDao mStepRecordDao;
+
+        public InsertStepRecordTask(StepRecordDao stepRecordDao) {
+            mStepRecordDao = stepRecordDao;
+        }
+
+        @Override
+        protected Void doInBackground(StepRecord... stepRecords) {
+            for (StepRecord record: stepRecords) {
+                mStepRecordDao.insert(record);
+            }
+            return null;
+        }
+    }
+
+    private static class InsertLocationRecordTask extends AsyncTask<LocationRecord, Void, Void> {
+
+        private LocationRecordDao mLocationRecordDao;
+
+        public InsertLocationRecordTask(LocationRecordDao locationRecordDao) {
+            mLocationRecordDao = locationRecordDao;
+        }
+
+        @Override
+        protected Void doInBackground(LocationRecord... locationRecords) {
+            for (LocationRecord record: locationRecords) {
+                mLocationRecordDao.insert(record);
+            }
+            return null;
         }
     }
 

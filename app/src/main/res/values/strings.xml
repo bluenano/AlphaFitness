@@ -12,7 +12,7 @@
     <string name="gender">Gender:</string>
     <string name="gender_edit_text">gender</string>
     <string name="weight">Weight:</string>
-    <string name="weight_edit_text">weight</string>
+    <string name="weight_edit_text">weight (lbs)</string>
     <string name="average_weekly">Average/Weekly</string>
     <string name="profile_distance">Distance</string>
     <string name="profile_time">Time</string>

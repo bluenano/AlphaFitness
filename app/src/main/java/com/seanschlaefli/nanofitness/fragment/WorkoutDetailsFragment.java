@@ -140,13 +140,7 @@ public class WorkoutDetailsFragment extends Fragment {
                 float timeInMinutes = UnitConverter.msToMinutes(recordTimes.get(i) - startTime);
                 values.add(new Entry(timeInMinutes, rate));
             }
-
         }
-        // Can't get this to work after migrating to AndroidX
-       /* mLineData = new LineDataSet(values,
-                getResources().getQuantityString(R.plurals.line_chart_label,
-                        SCALAR,
-                        SCALAR));*/
         mLineData = new LineDataSet(values,
                 "Steps Per " + Integer.toString(SCALAR) + " Minutes");
         setLineChartData();
